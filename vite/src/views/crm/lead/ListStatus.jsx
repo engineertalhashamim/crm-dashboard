@@ -13,7 +13,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Modal, Stack } from '@mui/material';
 import Button from '@mui/material/Button';
-import { useNavigate } from 'react-router';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
@@ -55,11 +54,6 @@ const ListStatus = () => {
 
   const dispatch = useDispatch();
   const { error, loading, statusArr } = useSelector((state) => state.status);
-
-  const navigate = useNavigate();
-  const gotoaddcontracts = () => {
-    navigate('/crm/contracts/add');
-  };
 
   useEffect(() => {
     const getAllStatus = async () => {
@@ -245,7 +239,7 @@ const ListStatus = () => {
                     tableContent = (
                       <TableRow>
                         <TableCell colSpan={columnsCount} align="center">
-                          <NoDataFound message="No status Found" onAddClick={gotoaddcontracts} />
+                          <NoDataFound message="No status Found" onAddClick={() => handleChangeOpenMode(null)} />
                         </TableCell>
                       </TableRow>
                     );

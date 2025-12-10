@@ -25,7 +25,6 @@ const statusSlice = createSlice({
     },
     setAddStatus: (state, action) => {
       state.statusArr.push(action.payload);
-      // state.statusArr = action.payload;
       state.error = null;
       state.loading = false;
       state.success = true;
@@ -43,7 +42,7 @@ const statusSlice = createSlice({
       }
       state.loading = false;
       state.error = null;
-      state.loading = true;
+      state.success = true;
     }
   }
 });

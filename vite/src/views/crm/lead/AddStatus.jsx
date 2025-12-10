@@ -52,8 +52,8 @@ const AddStatus = ({ CloseEvent, setSnackOpen, setSnackMessage, setSnackSeverity
     color: '#673ab7'
   });
 
-  const { id } = useParams();
-  const isEditMode = Boolean(id);
+  // const { id } = useParams();
+  // const isEditMode = Boolean(id);
 
   const handleChanged = (e) => {
     const { name, value } = e.target;
@@ -65,20 +65,20 @@ const AddStatus = ({ CloseEvent, setSnackOpen, setSnackMessage, setSnackSeverity
 
   useEffect(() => {
     if (editModaVar) {
-      const fetchContract = async () => {
+      const fetchStatus = async () => {
         try {
           const res = await axios.get(`http://localhost:8000/api/v1/status/singlestatusdata/${editModaVar}`);
           const data = res.data?.data;
           setStatusForm(data);
         } catch (err) {
-          console.error('Error fetching contract:', err);
+          console.error('Error fetching status:', err);
         } finally {
           console.log('All are perfect');
         }
       };
-      fetchContract();
+      fetchStatus();
     }
-  }, [id]);
+  }, [editModaVar]);
 
   const statusDataSubmit = async (e) => {
     e.preventDefault();
