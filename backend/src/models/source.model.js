@@ -1,10 +1,10 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../db";
+import { sequelize } from "../db/index.js";
 
 export const Sources = sequelize.define(
   "Sources",
   {
-    statusname: {
+    sourcename: {
       type: DataTypes.STRING(75),
       allowNull: false,
       unique: true,
@@ -18,10 +18,10 @@ export const Sources = sequelize.define(
     timestamps: true,
     tableName: "sources",
     hooks: {
-      beforeValidate: (sources) => {
-        for (const key in sources.dataValues) {
-          if (typeof sources.dataValues[key] === "string") {
-            sources.dataValues[key] = sources.dataValues[key].trim();
+      beforeValidate: (instance) => {
+        for (const key in instance.dataValues) {
+          if (typeof instance.dataValues[key] === "string") {
+            instance.dataValues[key] = instance.dataValues[key].trim();
           }
         }
       },

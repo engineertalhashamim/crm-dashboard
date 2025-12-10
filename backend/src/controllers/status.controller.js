@@ -63,18 +63,22 @@ const getAllStatus = asyncHandler(async (req, res) => {
 const singleStatusData = asyncHandler(async (req, res) => {
   const statusId = req.params.id;
 
-  const statuses = await Status.findOne({
+  const singleStatus = await Status.findOne({
     where: { id: statusId },
   });
 
-  if (!statuses) {
+  if (!singleStatus) {
     throw new ApiError(404, `status with ID ${statusId} not found`);
   }
 
   return res
     .status(200)
     .json(
-      new ApiResponse(200, statuses, "status details retrieved successfully")
+      new ApiResponse(
+        200,
+        singleStatus,
+        "status details retrieved successfully"
+      )
     );
 });
 
