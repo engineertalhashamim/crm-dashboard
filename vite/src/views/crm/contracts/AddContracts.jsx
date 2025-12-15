@@ -87,7 +87,6 @@ const AddContracts = () => {
           setContractForm(data);
         } catch (err) {
           console.error('Error fetching contract:', err);
-
         } finally {
           console.log('All are perfect');
         }
@@ -132,9 +131,11 @@ const AddContracts = () => {
         acc[curr.path] = curr.message;
         return acc;
       }, {});
-      console.log('formattedErrors:', formattedErrors);
 
-      const errorMessage = isEditMode ? 'Failed to update contract' : 'Failed to add contract';
+      // console.log('formattedErrors:', formattedErrors);
+      // console.log('backendErrorsArray is:', backendErrorsArray);
+
+      const errorMessage = editModaVar ? 'Failed to update status' : 'Failed to add status';
       dispatch(setError(formattedErrors));
       setMessage(errorMessage || 'Something went wrong');
       setSeverity('error');

@@ -30,7 +30,7 @@ export const Leads = sequelize.define(
     timestamps: true,
     tableName: "leads",
     Hooks: {
-      beforeValidate: (leads) => {
+      beforeValidate: (instant) => {
         for (const key in instant.dataValues) {
           if (typeof instant.dataValues[key] === "string") {
             instant.dataValues = instant.dataValues[key].trim();
