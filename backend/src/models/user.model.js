@@ -21,7 +21,7 @@ export const User = sequelize.define(
       allowNull: false,
       validate: {
         notEmpty: { msg: "password is required" },
-        len: { args: [2, 75], msg: "password must be 2 to 75 characters" },
+        len: { args: [5, 75], msg: "password must be 5 to 75 characters" },
       },
     },
     active: {
@@ -53,8 +53,9 @@ export const User = sequelize.define(
     },
   }
 );
-
+1
 // Custom method to check password
 User.prototype.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
+

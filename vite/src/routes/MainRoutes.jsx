@@ -36,6 +36,7 @@ const ListSources = Loadable(lazy(() => import('views/crm/lead/ListSources.jsx')
 
 const AddLead = Loadable(lazy(() => import('views/crm/lead/AddLead.jsx')));
 const ListLead = Loadable(lazy(() => import('views/crm/lead/ListLead.jsx')));
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -148,7 +149,6 @@ const MainRoutes = {
         }
       ]
     },
-
     {
       path: '/sample-page',
       element: <SamplePage />

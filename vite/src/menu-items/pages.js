@@ -10,7 +10,7 @@ const icons = {
 
 const pages = {
   id: 'pages',
-  title: 'Pages11',
+  title: 'Pages',
   caption: 'Pages Caption',
   icon: icons.IconKey,
   type: 'group',
@@ -25,23 +25,23 @@ const pages = {
           id: 'login',
           title: 'login',
           type: 'item',
-          url: '/pages/login',
+          url: '/login',
           target: true
         },
-        {
-          id: 'register',
-          title: 'register',
-          type: 'item',
-          url: '/pages/register',
-          target: true
-        },
-        {
-          id: 'register2',
-          title: 'register2',
-          type: 'item',
-          url: '/dummy.jsx',
-          target: true
-        }
+        // {
+        //   id: 'register',
+        //   title: 'register',
+        //   type: 'item',
+        //   url: '/pages/register',
+        //   target: true
+        // },
+        // {
+        //   id: 'register2',
+        //   title: 'register2',
+        //   type: 'item',
+        //   url: '/dummy.jsx',
+        //   target: true
+        // }
       ]
     }
   ]
