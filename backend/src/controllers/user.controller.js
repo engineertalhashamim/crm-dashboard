@@ -53,7 +53,7 @@ const getSingleUser = asyncHandler(async (req, res) => {
 });
 
 const updatedUser = asyncHandler(async (req, res) => {
-  const userId = req.params.id;
+  const userId = req.params.id; 
 
   const [updateCount, updatedRows] = await User.update(req.body, {
     where: { id: userId },
