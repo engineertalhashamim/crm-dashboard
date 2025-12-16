@@ -3,6 +3,7 @@ import { lazy } from 'react';
 // project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
+import ProtectedRoute from '../ui-component/common/ProtectedRoute';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -41,21 +42,25 @@ const ListLead = Loadable(lazy(() => import('views/crm/lead/ListLead.jsx')));
 
 const MainRoutes = {
   path: '/',
-  element: <MainLayout />,
+  element: (
+  <ProtectedRoute>
+      <MainLayout />
+  </ProtectedRoute>
+  ),
   children: [
     {
-      path: '/',
+      index: true,
       element: <DashboardDefault />
     },
-    {
-      path: 'dashboard',
-      children: [
-        {
-          path: 'default',
-          element: <DashboardDefault />
-        }
-      ]
-    },
+    // {
+    //   path: 'dashboard1',
+    //   children: [
+    //     {
+    //       path: 'default',
+    //       element: <DashboardDefault />
+    //     }
+    //   ]
+    // },
     {
       path: 'typography',
       element: <UtilsTypography />

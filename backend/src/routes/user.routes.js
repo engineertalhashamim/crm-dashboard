@@ -1,11 +1,5 @@
 import { Router } from "express";
-import {
-  createStatus,
-  getAllStatus,
-  deleteStatus,
-  singleStatusData,
-  updateStatus,
-} from "../controllers/status.controller.js";
+import isLoggedIn from "../midlewares/auth.middleware.js";
 import {
   checkAuth,
   createUser,
@@ -19,13 +13,14 @@ import {
 
 const router = Router();
 router.route("/createuser").post(createUser);
-router.route("/getalluser").get(getAllUser);
-router.route("/deleteuser/:id").delete(deleteUser);
-router.route("/singleuserdata/:id").get(getSingleUser);
-router.route("/updateuser/:id").put(updatedUser);
-router.route("/loginuser").get(loginUser);
-router.route("/logoutUser").get(logoutUser);
-router.route("/checkauth").get(checkAuth);
+router.route("/loginuser").post(loginUser);
+
+router.route("/getalluser").get(isLoggedIn, getAllUser);
+router.route("/deleteuser/:id").delete(isLoggedIn, deleteUser);
+router.route("/singleuserdata/:id").get(isLoggedIn, getSingleUser);
+router.route("/updateuser/:id").put(isLoggedIn, updatedUser);
+router.route("/logoutUser").get(isLoggedIn, logoutUser);
+router.route("/checkauth").get(isLoggedIn, checkAuth);
 
 // Testing Route
 // router.get('/test', (req, res) => {

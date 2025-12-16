@@ -16,7 +16,8 @@ const createUser = asyncHandler(async (req, res) => {
     active: true,
   });
 
-  if (!isUser) throw new ApiError(400, "Something went wrong while registering the user");
+  if (!isUser)
+    throw new ApiError(400, "Something went wrong while registering the user");
 
   return res
     .status(201)
@@ -53,7 +54,7 @@ const getSingleUser = asyncHandler(async (req, res) => {
 });
 
 const updatedUser = asyncHandler(async (req, res) => {
-  const userId = req.params.id; 
+  const userId = req.params.id;
 
   const [updateCount, updatedRows] = await User.update(req.body, {
     where: { id: userId },
@@ -128,7 +129,12 @@ const logoutUser = asyncHandler(async (req, res) => {
 });
 
 const checkAuth = asyncHandler(async (req, res) => {
+  console.log("auth api test 1..");
   if (req.session && req.session.user) {
+    console.log("auth api test 1..");
+    console.log("req.session test ..", req.session);
+    console.log("req.session.user test ..", req.session.user);
+
     return res
       .status(200)
       .json(new ApiResponse(200, req.session.user, "Authenticated"));
