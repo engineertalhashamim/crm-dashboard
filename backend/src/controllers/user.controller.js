@@ -61,63 +61,59 @@ const updatedUser = asyncHandler(async (req, res) => {
   if (!user) throw new ApiError(404, "User not found");
 
   // update username if provided
-  if(username !== undefined) {
+  if (username !== undefined) {
     user.username = username;
   }
-  
-  if(password){
+
+  if (password) {
     user.password = password;
   }
 
   await user.save();
 
- return res
+  return res
     .status(200)
     .json(new ApiResponse(200, user, "User updated successfully"));
-
-
-  // const [updateCount, updatedRows] = await User.update(req.body, {
-  //   where: { id: userId },
-  //   returning: true,
-  //   individualHooks: true,
-  // });
-
-  // if (updateCount === 0) {
-  //   throw new ApiError(404, `User with ID ${userId} not found`);
-  // }
-
-  // const updatedUser = updatedRows[0];
-
-  // return res
-  //   .status(200)
-  //   .json(new ApiResponse(200, updatedUser, "User updated successfully"));
 });
 
 const loginUser = asyncHandler(async (req, res) => {
-  console.log("ok11...");
   const username = req.body.username;
   const password = req.body.password;
-  console.log("ok22...");
 
-  console.log("login user..", username);
-  console.log("login pass..", password);
-  console.log("ok33...");
-
-  if (!username || !password) {
-    throw new ApiError(400, "Username and password required");
+  if (!username) {
+    throw new ApiError(400, "Validation error", [
+      { path: "username", message: "Username is required" },
+    ]);
   }
-  console.log("ok44...");
+
+  if (!password) {
+    throw new ApiError(400, "Validation error", [
+      { path: "password", message: "Password is required" },
+    ]);
+  }
 
   const user = await User.findOne({
     where: { username: username.toLowerCase() },
   });
 
-  if (!user) throw new ApiError(401, "user not found");
+  if (!user) {
+    throw new ApiError(401, "Validation error", [
+      { path: "username", message: "User not found" },
+    ]);
+  }
 
-  if (!user.active) throw new ApiError(403, "Account is disabled");
+  if (!user.active) {
+    throw new ApiError(403, "Validation error", [
+      { path: "username", message: "Account is disabled" },
+    ]);
+  }
 
   const isMatch = await user.isPasswordCorrect(password);
-  if (!isMatch) throw new ApiError(400, "Invalid credentials");
+  if (!isMatch) {
+    throw new ApiError(400, "Validation error", [
+      { path: "password", message: "Invalid password" },
+    ]);
+  }
 
   req.session.user = {
     __username: user.username,

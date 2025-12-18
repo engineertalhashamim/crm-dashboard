@@ -46,13 +46,16 @@ const userSlice = createSlice({
       state.success = true;
     },
     setLoggedInUser: (state, action) => {
-        state.loggedInUser = action.payload
+      state.loggedInUser = action.payload;
     },
     clearSessson: (state, action) => {
-        state.loggedInUser = null
+      state.loggedInUser = null;
     },
+    clearError: (state) => {
+      state.error = {};
+    }
   }
 });
 
-export const { setLoading, setError, setAllUser, setAddUser, setDeleteUser, setUpdateUser } = userSlice.actions;
+export const { setLoading, setError, setAllUser, setAddUser, setDeleteUser, setUpdateUser, setLoggedInUser, clearError } = userSlice.actions;
 export default userSlice.reducer;

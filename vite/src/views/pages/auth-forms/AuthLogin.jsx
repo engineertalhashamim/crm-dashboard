@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import React from 'react';
 
@@ -26,16 +26,21 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { setError, setLoading, setLoggedInUser, clearError } from '../../../store/slices/user.Slice.js';
+
+import { useDispatch, useSelector } from 'react-redux';
 // ===============================|| JWT - LOGIN ||=============================== //
 
 export default function AuthLogin() {
   const [checked, setChecked] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState([]);
 
   const [message, setMessage] = React.useState('');
   const [severity, setSeverity] = React.useState('success');
   const [open, setOpen] = useState(null);
+
+  const dispatch = useDispatch();
+  const { error, loading, usersArr } = useSelector((state) => state.user);
 
   const [sourceForm, setSourceForm] = useState({
     username: '',
@@ -60,33 +65,38 @@ export default function AuthLogin() {
     event.preventDefault();
   };
 
-  const sourceDataSubmit = async (e) => {
+  useEffect(() => {
+    dispatch(clearError());
+  }, [clearError]);
+
+  const userDataSubmit = async (e) => {
     e.preventDefault();
-    // dispatch(setLoading(true));
+    dispatch(setLoading(true));
     try {
-       console.log('Submitting login form...');
       if (editModaVar) {
-        const res = await axios.put(`http://localhost:8000/api/v1/source/updatesource/${editModaVar}`, sourceForm);
-        const resData = res.data?.data;
-        if (resData.id) {
-          dispatch(setUpdateSource(resData));
-          setMessage('source updated successfully!');
-        } else {
-          setMessage('Invalid edit response data');
-          setSeverity('error');
-        }
+        // const res = await axios.put(`http://localhost:8000/api/v1/source/updatesource/${editModaVar}`, sourceForm);
+        // const resData = res.data?.data;
+        // if (resData.id) {
+        //   dispatch(setUpdateSource(resData));
+        //   setMessage('source updated successfully!');
+        // } else {
+        //   setMessage('Invalid edit response data');
+        //   setSeverity('error');
+        // }
       } else {
-        console.log('souce form test 1..');
         const res = await axios.post('http://localhost:8000/api/v1/user/loginuser', sourceForm, {
           withCredentials: true // important for sessions
         });
         const resData = res.data?.data;
-          console.log('test1111 is..');
         if (resData.id) {
-          console.log('souce form data is..', resData);
-          // dispatch(setAddSource(resData));
           navigate('/');
           setMessage('Login successfully!');
+          dispatch(
+            setLoggedInUser({
+              id: resData.id,
+              username: resData.username
+            })
+          );
         } else {
           setMessage('Invalid response data');
           setSeverity('error');
@@ -96,53 +106,47 @@ export default function AuthLogin() {
       setSeverity('success');
       setOpen(true);
     } catch (err) {
-      // const backendErrorsArray = err.response?.data?.errors || [];
-      // const formattedErrors = backendErrorsArray.reduce((acc, curr) => {
-      //   acc[curr.path] = curr.message;
-      //   return acc;
-      // }, {});
+      const backendErrorsArray = err.response?.data?.errors || [];
+      const formattedErrors = backendErrorsArray.reduce((acc, curr) => {
+        acc[curr.path] = curr.message;
+        return acc;
+      }, {});
 
-      console.log('err is.........:', err.response?.data?.message);
-      // console.log('formattedErrors.is :', formattedErrors);
-      // console.log('backendErrorsArray is:', backendErrorsArray);
+      console.log('formattedErrors.is :', formattedErrors);
+      console.log('backendErrorsArray is:', backendErrorsArray);
 
-      const errorMessage = editModaVar ? 'Failed to update source' : 'Failed to login';
-      // dispatch(setError(formattedErrors));
-      setError(err.response?.data?.message);
+      const errorMessage = editModaVar ? 'Failed to update login' : 'Failed to login';
+      dispatch(setError(formattedErrors));
       setMessage(errorMessage || 'Something went wrong');
       setSeverity('error');
       setOpen(true);
     } finally {
-      // dispatch(setLoading(false));
+      dispatch(setLoading(false));
     }
   };
 
   return (
     <>
-      <form onSubmit={sourceDataSubmit}>
-        <CustomFormControl fullWidth>
-          <InputLabel htmlFor="outlined-adornment-email-login">Email Address / Username</InputLabel>
-          <OutlinedInput
-            // id="outlined-adornment-email-login"
-            type="text"
-            value={sourceForm.username}
-            name="username"
-            onChange={handleChanged}
-            error={!!error?.username}
-            helperText={error?.username}
-          />
+      <form onSubmit={userDataSubmit}>
+        <CustomFormControl fullWidth error={!!error?.username}>
+          <InputLabel>Email Address / Username</InputLabel>
+
+          <OutlinedInput type="text" value={sourceForm.username} name="username" onChange={handleChanged} />
+
+          {error?.username && (
+            <Typography variant="caption" color="red">
+              {error.username}
+            </Typography>
+          )}
         </CustomFormControl>
 
-        <CustomFormControl fullWidth>
+        <CustomFormControl fullWidth error={!!error?.password}>
           <InputLabel htmlFor="outlined-adornment-password-login">Password</InputLabel>
           <OutlinedInput
-            // id="outlined-adornment-password-login"
             type={showPassword ? 'text' : 'password'}
             value={sourceForm.password}
             name="password"
             onChange={handleChanged}
-            error={!!error?.password}
-            helperText={error?.password}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -158,6 +162,11 @@ export default function AuthLogin() {
             }
             label="Password"
           />
+          {error?.password && (
+            <Typography variant="caption" color="red">
+              {error?.password}
+            </Typography>
+          )}
         </CustomFormControl>
 
         <Grid container sx={{ alignItems: 'center', justifyContent: 'space-between' }}>

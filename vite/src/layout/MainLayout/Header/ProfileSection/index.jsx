@@ -33,6 +33,7 @@ import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons-re
 import axios from 'axios';
 import { persistor } from '../../../../store/store';
 import { Navigate, useNavigate } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -48,24 +49,25 @@ export default function ProfileSection() {
   const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
+  const { loggedInUser } = useSelector((state) => state.user);
 
-const logoutHandle = async () => {
-  try {
-    console.log("logout hit frontend");
+  // useEffect(() => {
+  //   console.log('loggedInUser is..', loggedInUser);
+  // }, [loggedInUser]);
 
-    const res = await axios.post(
-      "http://localhost:8000/api/v1/user/logoutuser",
-      {}, // 👈 empty body
-      { withCredentials: true } // 👈 config
-    );
-
-    console.log("logout success", res.data);
-    navigate("/login");
-  } catch (err) {
-    console.log("logout failed", err.response?.data || err.message);
-  }
-};
-
+  const logoutHandle = async () => {
+    try {
+      const res = await axios.post(
+        'http://localhost:8000/api/v1/user/logoutuser',
+        {}, // 👈 empty body
+        { withCredentials: true } // 👈 config
+      );
+      persistor.purge();
+      navigate('/login');
+    } catch (err) {
+      console.log('logout failed', err.response?.data || err.message);
+    }
+  };
 
   /**
    * anchorRef is used on different components and specifying one type leads to other components throwing an error
@@ -144,7 +146,7 @@ const logoutHandle = async () => {
                         <Stack direction="row" sx={{ alignItems: 'center', gap: 0.5 }}>
                           <Typography variant="h4">Good Morning,</Typography>
                           <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                            Johne Doe
+                            {loggedInUser.username}
                           </Typography>
                         </Stack>
                         <Typography variant="subtitle2">Project Admin</Typography>
