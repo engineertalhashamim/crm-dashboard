@@ -38,29 +38,23 @@ const ListSources = Loadable(lazy(() => import('views/crm/lead/ListSources.jsx')
 const AddLead = Loadable(lazy(() => import('views/crm/lead/AddLead.jsx')));
 const ListLead = Loadable(lazy(() => import('views/crm/lead/ListLead.jsx')));
 
+const ListUser = Loadable(lazy(() => import('views/crm/users/ListUser.jsx')));
+const AddUser = Loadable(lazy(() => import('views/crm/users/AddUser.jsx')));
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
   path: '/',
   element: (
-  <ProtectedRoute>
+    <ProtectedRoute>
       <MainLayout />
-  </ProtectedRoute>
+    </ProtectedRoute>
   ),
   children: [
     {
       index: true,
       element: <DashboardDefault />
     },
-    // {
-    //   path: 'dashboard1',
-    //   children: [
-    //     {
-    //       path: 'default',
-    //       element: <DashboardDefault />
-    //     }
-    //   ]
-    // },
     {
       path: 'typography',
       element: <UtilsTypography />
@@ -149,6 +143,14 @@ const MainRoutes = {
           children: [
             { path: 'list', element: <ListContracts /> },
             { path: 'add', element: <AddContracts /> },
+            { path: 'edit/:id', element: <AddContracts /> }
+          ]
+        },
+        {
+          path: 'users',
+          children: [
+            { path: 'list', element: <ListUser /> },
+            { path: 'add', element: <AddUser /> },
             { path: 'edit/:id', element: <AddContracts /> }
           ]
         }

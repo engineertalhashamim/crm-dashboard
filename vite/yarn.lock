@@ -754,17 +754,17 @@
   resolved "https://registry.npmjs.org/@svgdotjs/svg.select.js/-/svg.select.js-4.0.3.tgz"
   integrity sha512-qkMgso1sd2hXKd1FZ1weO7ANq12sNmQJeGDjs46QwDVsxSRcHmvWKL2NDF7Yimpwf3sl5esOLkPqtV2bQ3v/Jg==
 
-"@tabler/icons-react@^3.35.0":
-  version "3.35.0"
-  resolved "https://registry.npmjs.org/@tabler/icons-react/-/icons-react-3.35.0.tgz"
-  integrity sha512-XG7t2DYf3DyHT5jxFNp5xyLVbL4hMJYJhiSdHADzAjLRYfL7AnjlRfiHDHeXxkb2N103rEIvTsBRazxXtAUz2g==
+"@tabler/icons-react@^3.36.0":
+  version "3.36.0"
+  resolved "https://registry.npmjs.org/@tabler/icons-react/-/icons-react-3.36.0.tgz"
+  integrity sha512-sSZ00bEjTdTTskVFykq294RJq+9cFatwy4uYa78HcYBCXU1kSD1DIp5yoFsQXmybkIOKCjp18OnhAYk553UIfQ==
   dependencies:
-    "@tabler/icons" "3.35.0"
+    "@tabler/icons" "3.36.0"
 
-"@tabler/icons@3.35.0":
-  version "3.35.0"
-  resolved "https://registry.npmjs.org/@tabler/icons/-/icons-3.35.0.tgz"
-  integrity sha512-yYXe+gJ56xlZFiXwV9zVoe3FWCGuZ/D7/G4ZIlDtGxSx5CGQK110wrnT29gUj52kEZoxqF7oURTk97GQxELOFQ==
+"@tabler/icons@3.36.0":
+  version "3.36.0"
+  resolved "https://registry.npmjs.org/@tabler/icons/-/icons-3.36.0.tgz"
+  integrity sha512-z9OfTEG6QbaQWM9KBOxxUdpgvMUn0atageXyiaSc2gmYm51ORO8Ua7eUcjlks+Dc0YMK4rrodAFdK9SfjJ4ZcA==
 
 "@types/babel__core@^7.20.5":
   version "7.20.5"

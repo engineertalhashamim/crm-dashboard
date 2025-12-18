@@ -20,10 +20,10 @@ import axios from 'axios';
 import { useState } from 'react';
 import DeleteDialog from '../../../ui-component/dialog-box/DeleteDialog.jsx';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllSource, setDeleteSource, setLoading, setError } from '../../../store/slices/sourceSlice.js';
+import { setAllUser, setDeleteUser, setLoading, setError } from '../../../store/slices/user.Slice.js';
 import LoopIcon from '@mui/icons-material/Loop';
 import NoDataFound from '../../../ui-component/common/NoDataFound.jsx';
-import AddSource from './AddSources.jsx';
+import AddUser from './AddUser.jsx';
 import Snackbar from '@mui/material/Snackbar';
 
 const style = {
@@ -38,7 +38,7 @@ const style = {
   p: 4
 };
 
-const ListSources = () => {
+const ListUser = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(7);
   const [openDelete, setOpenDelete] = useState(false);
@@ -53,23 +53,24 @@ const ListSources = () => {
   const [snackSeverity, setSnackSeverity] = React.useState('success');
 
   const dispatch = useDispatch();
-  const {error,loading, sourceArr} = useSelector((state)=> state.source);
+  const { error, loading, usersArr } = useSelector((state) => state.user);
 
   useEffect(() => {
-    const getAllSource = async () => {
+    const getAllUsers = async () => {
       dispatch(setLoading(true));
       try {
-        const res = await axios.get('http://localhost:8000/api/v1/source/getallsource');
+        const res = await axios.get('http://localhost:8000/api/v1/user/getalluser', { withCredentials: true });
         const resData = res.data?.data || [];
-        dispatch(setAllSource(resData));
+        dispatch(setAllUser(resData));
+        console.log('hello', resData);
       } catch (error) {
-        console.log('Error in fetching source', error);
-        dispatch(setError(error.message || 'Failed to fetch source'));
+        console.log('Error in fetching user', error);
+        dispatch(setError(error.message || 'Failed to fetch user'));
       } finally {
         dispatch(setLoading(false));
       }
     };
-    getAllSource();
+    getAllUsers();
   }, [dispatch]);
 
   // useEffect(() => {
@@ -78,13 +79,13 @@ const ListSources = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const deleteSource = await axios.delete(`http://localhost:8000/api/v1/source/deletesource/${selectedId}`);
-      dispatch(setDeleteSource(selectedId));
-      setSnackMessage('source deleted successfully!');
+      const deleteUser = await axios.delete(`http://localhost:8000/api/v1/user/deleteuser/${selectedId}`, { withCredentials: true });
+      dispatch(setDeleteUser(selectedId));
+      setSnackMessage('User deleted successfully!');
     } catch (error) {
-      setSnackMessage('something wet wrong!');
+      setSnackMessage('something went wrong!');
       setSnackSeverity('error');
-      console.log('Error deleting source', error);
+      console.log('Error deleting User', error);
     }
 
     setSnackSeverity('success');
@@ -121,14 +122,14 @@ const ListSources = () => {
     setPage(0);
   };
 
-  const columns = [{ label: 'Sno#' }, { label: 'SourceName' }, { label: 'Action' }];
+  const columns = [{ label: 'Sno#' }, { label: 'User Name' }, { label: 'Action' }];
 
   const columnsCount = columns.length;
 
   return (
     <>
       <Modal open={openMode} onClose={handleChangeCloseMode}>
-        <AddSource
+        <AddUser
           CloseEvent={handleChangeCloseMode}
           setSnackOpen={setSnackOpen}
           setSnackMessage={setSnackMessage}
@@ -155,11 +156,11 @@ const ListSources = () => {
             }}
           >
             <Typography variant="h3" sx={{ fontWeight: 500, fontSize: '1.155rem' }}>
-              Source
+              Users
             </Typography>
             <Typography gutterBottom component="div">
               <Button onClick={() => handleChangeOpenMode(null)} variant="contained" className="addData-button" endIcon={<AddCircleIcon />}>
-                Add Source
+                Add User
               </Button>
             </Typography>
           </Stack>
@@ -214,12 +215,12 @@ const ListSources = () => {
                         </TableCell>
                       </TableRow>
                     );
-                  } else if (Array.isArray(sourceArr) && sourceArr.length > 0) {
-                    tableContent = sourceArr.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+                  } else if (Array.isArray(usersArr) && usersArr.length > 0) {
+                    tableContent = usersArr.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
                       return (
                         <TableRow hover role="checkbox" key={row.id}>
                           <TableCell>{index + 1}</TableCell>
-                          <TableCell>{row.sourcename}</TableCell>
+                          <TableCell>{row.username}</TableCell>
                           <TableCell>
                             <Stack spacing={2} direction="row" sx={{ justifyContent: 'flex-end' }}>
                               <EditIcon
@@ -227,7 +228,7 @@ const ListSources = () => {
                                 style={{ fontSize: '20px', color: 'blue', cursor: 'pointer' }}
                               />
                               <DeleteIcon
-                                onClick={() => handleOpenDelete(row.id, row.sourcename)}
+                                onClick={() => handleOpenDelete(row.id, row.username)}
                                 style={{ fontSize: '20px', color: 'darkred', cursor: 'pointer' }}
                               />
                             </Stack>
@@ -239,7 +240,7 @@ const ListSources = () => {
                     tableContent = (
                       <TableRow>
                         <TableCell colSpan={columnsCount} align="center">
-                          <NoDataFound message="No source Found" onAddClick={() => handleChangeOpenMode(null)} />
+                          <NoDataFound message="No user Found" onAddClick={() => handleChangeOpenMode(null)} />
                         </TableCell>
                       </TableRow>
                     );
@@ -253,7 +254,7 @@ const ListSources = () => {
           <TablePagination
             rowsPerPageOptions={[7, 25, 100]}
             component="div"
-            count={sourceArr.length}
+            count={usersArr.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -266,4 +267,4 @@ const ListSources = () => {
   );
 };
 
-export default ListSources;
+export default ListUser;

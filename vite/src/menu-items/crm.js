@@ -1,12 +1,14 @@
 // icons
-import { IconUsers, IconPlus, IconAddressBook, IconReceipt, IconFileText } from '@tabler/icons-react';
+import { IconUsers, IconPlus, IconAddressBook, IconReceipt, IconFileText, IconTarget, IconBriefcase } from '@tabler/icons-react';
 
 const icons = {
   IconUsers,
   IconPlus,
   IconAddressBook,
   IconReceipt,
-  IconFileText
+  IconFileText,
+  IconBriefcase,
+  IconTarget
 };
 
 // ==============================|| CRM MENU ITEMS ||============================== //
@@ -16,10 +18,18 @@ const crm = {
   type: 'group',
   children: [
     {
+      id: 'crm-users',
+      title: 'Users',
+      type: 'item',
+      url: '/crm/users/list',
+      icon: icons.IconUsers,
+      breadcrumbs: false
+    },
+    {
       id: 'crm-clients',
       title: 'Clients',
       type: 'collapse',
-      icon: icons.IconUsers,
+      icon: icons.IconBriefcase,
       children: [
         {
           id: 'client-list',
@@ -65,7 +75,7 @@ const crm = {
       id: 'crm-lead',
       title: 'Lead',
       type: 'collapse',
-      icon: icons.IconAddressBook,
+      icon: icons.IconTarget,
       children: [
         {
           id: 'lead-statuses',

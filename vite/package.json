@@ -11,7 +11,7 @@
     "@mui/icons-material": "7.3.4",
     "@mui/material": "7.3.4",
     "@reduxjs/toolkit": "^2.9.2",
-    "@tabler/icons-react": "^3.35.0",
+    "@tabler/icons-react": "^3.36.0",
     "@vitejs/plugin-react": "5.0.4",
     "apexcharts": "5.3.5",
     "axios": "^1.13.0",

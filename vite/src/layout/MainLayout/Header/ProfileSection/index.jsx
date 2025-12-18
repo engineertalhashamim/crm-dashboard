@@ -30,6 +30,9 @@ import useConfig from 'hooks/useConfig';
 // assets
 import User1 from 'assets/images/users/user-round.svg';
 import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons-react';
+import axios from 'axios';
+import { persistor } from '../../../../store/store';
+import { Navigate, useNavigate } from 'react-router';
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -43,6 +46,26 @@ export default function ProfileSection() {
   const [value, setValue] = useState('');
   const [notification, setNotification] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const navigate = useNavigate();
+
+const logoutHandle = async () => {
+  try {
+    console.log("logout hit frontend");
+
+    const res = await axios.post(
+      "http://localhost:8000/api/v1/user/logoutuser",
+      {}, // 👈 empty body
+      { withCredentials: true } // 👈 config
+    );
+
+    console.log("logout success", res.data);
+    navigate("/login");
+  } catch (err) {
+    console.log("logout failed", err.response?.data || err.message);
+  }
+};
+
 
   /**
    * anchorRef is used on different components and specifying one type leads to other components throwing an error
@@ -210,7 +233,13 @@ export default function ProfileSection() {
                           <ListItemIcon>
                             <IconLogout stroke={1.5} size="20px" />
                           </ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2">Logout</Typography>} />
+                          <ListItemText
+                            primary={
+                              <Typography variant="body2" onClick={() => logoutHandle()}>
+                                Logout
+                              </Typography>
+                            }
+                          />
                         </ListItemButton>
                       </List>
                     </Box>

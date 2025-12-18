@@ -19,7 +19,7 @@ router.route("/getalluser").get(isLoggedIn, getAllUser);
 router.route("/deleteuser/:id").delete(isLoggedIn, deleteUser);
 router.route("/singleuserdata/:id").get(isLoggedIn, getSingleUser);
 router.route("/updateuser/:id").put(isLoggedIn, updatedUser);
-router.route("/logoutUser").get(isLoggedIn, logoutUser);
+router.route("/logoutuser").post(isLoggedIn, logoutUser);
 router.route("/checkauth").get(isLoggedIn, checkAuth);
 
 // Testing Route

@@ -55,22 +55,42 @@ const getSingleUser = asyncHandler(async (req, res) => {
 
 const updatedUser = asyncHandler(async (req, res) => {
   const userId = req.params.id;
+  const { username, password } = req.body;
 
-  const [updateCount, updatedRows] = await User.update(req.body, {
-    where: { id: userId },
-    returning: true,
-    individualHooks: true,
-  });
+  const user = await User.findByPk(userId);
+  if (!user) throw new ApiError(404, "User not found");
 
-  if (updateCount === 0) {
-    throw new ApiError(404, `User with ID ${userId} not found`);
+  // update username if provided
+  if(username !== undefined) {
+    user.username = username;
+  }
+  
+  if(password){
+    user.password = password;
   }
 
-  const updatedUser = updatedRows[0];
+  await user.save();
 
-  return res
+ return res
     .status(200)
-    .json(new ApiResponse(200, updatedUser, "User updated successfully"));
+    .json(new ApiResponse(200, user, "User updated successfully"));
+
+
+  // const [updateCount, updatedRows] = await User.update(req.body, {
+  //   where: { id: userId },
+  //   returning: true,
+  //   individualHooks: true,
+  // });
+
+  // if (updateCount === 0) {
+  //   throw new ApiError(404, `User with ID ${userId} not found`);
+  // }
+
+  // const updatedUser = updatedRows[0];
+
+  // return res
+  //   .status(200)
+  //   .json(new ApiResponse(200, updatedUser, "User updated successfully"));
 });
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -114,6 +134,12 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
+  console.log("logou test1..");
+  if (!req.session) {
+    return res.status(200).json({ message: "Already logged out" });
+  }
+  console.log("logou test3..");
+
   req.session.destroy((err) => {
     res.clearCookie("connect.sid", {
       path: "/",
@@ -122,6 +148,8 @@ const logoutUser = asyncHandler(async (req, res) => {
       secure: false,
       sameSite: "strict",
     });
+    console.log("logou test3..");
+
     return res
       .status(200)
       .json(new ApiResponse(200, null, "Logout Successfully"));

@@ -27,7 +27,7 @@ import '@fontsource/poppins/700.css';
 import { Provider } from 'react-redux';
 import store, { persistor } from './store/store';
 import { PersistGate } from 'redux-persist/integration/react';
-import { AuthProvider } from './contexts/AuthContext';
+// import { AuthProvider } from './contexts/AuthContext';
 
 // ==============================|| REACT DOM RENDER ||============================== //
 
@@ -37,9 +37,9 @@ root.render(
   <Provider store={store}>
     <ConfigProvider>
       <PersistGate loading={null} persistor={persistor}>
-        <AuthProvider>
+        {/* <AuthProvider> */}
           <App />
-        </AuthProvider>
+        {/* </AuthProvider> */}
       </PersistGate>
     </ConfigProvider>
   </Provider>
