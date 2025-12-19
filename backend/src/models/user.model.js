@@ -4,6 +4,14 @@ import bcrypt from "bcrypt";
 export const User = sequelize.define(
   "User",
   {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: "Name is required" },
+        len: { args: [2, 100], msg: "Name must be 2 to 100 characters" },
+      },
+    },
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -14,6 +22,14 @@ export const User = sequelize.define(
       },
       set(value) {
         this.setDataValue("username", value.toLowerCase());
+      },
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: { msg: "Invalid email address" },
       },
     },
     password: {
@@ -53,9 +69,8 @@ export const User = sequelize.define(
     },
   }
 );
-1
+1;
 // Custom method to check password
 User.prototype.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
-

@@ -4,7 +4,7 @@ const initialState = {
   usersArr: [],
   loggedInUser: {},
   loading: false,
-  error: null,
+  error: {},
   success: false
 };
 

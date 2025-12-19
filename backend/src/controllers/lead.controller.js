@@ -7,6 +7,7 @@ import { Sources } from "../models/source.model.js";
 import { Leads } from "../models/leads.model.js";
 
 const createLead = asyncHandler(async (req, res) => {
+    console.log("hello 1..")
   const {
     parent_status_id,
     parent_source_id,
@@ -48,23 +49,23 @@ const createLead = asyncHandler(async (req, res) => {
     parent_status_id,
     parent_source_id,
     parent_user_id,
-    tags,
-    name,
-    position,
-    email,
-    website,
-    phone,
-    leadValue,
-    company,
-    description,
-    address,
-    city,
-    state,
-    country,
-    zipCode,
-    defaultLanguage,
-    isPublic,
-    contactedToday,
+    // tags,
+    // name,
+    // position,
+    // email,
+    // website,
+    // phone,
+    // leadValue,
+    // company,
+    // description,
+    // address,
+    // city,
+    // state,
+    // country,
+    // zipCode,
+    // defaultLanguage,
+    // isPublic,
+    // contactedToday,
   });
 
   if (!createdLead) throw new ApiError(400, "Leads creation failed");
@@ -93,8 +94,7 @@ const getParentStatusWithLead = async (leadId) => {
       {
         model: User,
         as: "parentUser",
-        attributes: ["id", "username"],
-        // attributes: ["id", "name", "email"],
+        attributes: ["id", "name","email"],
       },
     ],
   });

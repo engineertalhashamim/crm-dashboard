@@ -20,7 +20,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import DeleteDialog from '../../../ui-component/dialog-box/DeleteDialog.jsx';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllUser, setDeleteUser, setLoading, setError } from '../../../store/slices/user.Slice.js';
+import { setAllUser, setDeleteUser, setLoading, setError, clearError } from '../../../store/slices/user.Slice.js';
 import LoopIcon from '@mui/icons-material/Loop';
 import NoDataFound from '../../../ui-component/common/NoDataFound.jsx';
 import AddUser from './AddUser.jsx';
@@ -72,10 +72,6 @@ const ListUser = () => {
     };
     getAllUsers();
   }, [dispatch]);
-
-  // useEffect(() => {
-  //   console.log('redux data source is.. ', sourceArr);
-  // }, [sourceArr]);
 
   const handleConfirmDelete = async () => {
     try {

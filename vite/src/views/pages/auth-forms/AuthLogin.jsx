@@ -43,11 +43,12 @@ export default function AuthLogin() {
   const { error, loading, usersArr } = useSelector((state) => state.user);
 
   const [sourceForm, setSourceForm] = useState({
-    username: '',
+    identifier: '',
     password: ''
   });
 
   const handleChanged = (e) => {
+    dispatch(clearError()); // clear error on typing
     const { name, value } = e.target;
     setSourceForm({
       ...sourceForm,
@@ -67,7 +68,7 @@ export default function AuthLogin() {
 
   useEffect(() => {
     dispatch(clearError());
-  }, [clearError]);
+  }, [dispatch]);
 
   const userDataSubmit = async (e) => {
     e.preventDefault();
@@ -88,6 +89,7 @@ export default function AuthLogin() {
           withCredentials: true // important for sessions
         });
         const resData = res.data?.data;
+        console.log('test log is..', resData);
         if (resData.id) {
           navigate('/');
           setMessage('Login successfully!');
@@ -128,14 +130,14 @@ export default function AuthLogin() {
   return (
     <>
       <form onSubmit={userDataSubmit}>
-        <CustomFormControl fullWidth error={!!error?.username}>
+        <CustomFormControl fullWidth error={!!error?.identifier}>
           <InputLabel>Email Address / Username</InputLabel>
 
-          <OutlinedInput type="text" value={sourceForm.username} name="username" onChange={handleChanged} />
+          <OutlinedInput type="text" value={sourceForm.identifier} name="identifier" onChange={handleChanged} />
 
-          {error?.username && (
+          {error?.identifier && (
             <Typography variant="caption" color="red">
-              {error.username}
+              {error.identifier}
             </Typography>
           )}
         </CustomFormControl>

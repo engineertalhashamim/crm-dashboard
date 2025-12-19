@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 // import { setAddSource, setLoading, setError, setUpdateSource } from '../../../store/slices/sourceSlice.js';
-import { setLoading, setError, setAddUser, setUpdateUser } from '../../../store/slices/user.Slice.js';
+import { setLoading, setError, setAddUser, setUpdateUser, clearError } from '../../../store/slices/user.Slice.js';
 
 const style = {
   position: 'absolute',
@@ -48,7 +48,9 @@ const AddUser = ({ CloseEvent, setSnackOpen, setSnackMessage, setSnackSeverity, 
   const dispatch = useDispatch();
   const { error, loading } = useSelector((state) => state.user);
   const [userForm, setUserForm] = useState({
+    name: '',
     username: '',
+    email: '',
     password: ''
   });
 
@@ -61,6 +63,10 @@ const AddUser = ({ CloseEvent, setSnackOpen, setSnackMessage, setSnackSeverity, 
   };
 
   useEffect(() => {
+    dispatch(clearError());
+  }, [editModaVar]);
+
+  useEffect(() => {
     if (editModaVar) {
       const fetchUser = async () => {
         try {
@@ -68,7 +74,9 @@ const AddUser = ({ CloseEvent, setSnackOpen, setSnackMessage, setSnackSeverity, 
           const data = res.data?.data;
           console.log('this is data...', data);
           setUserForm({
+            name: data.name,
             username: data.username,
+            email: data.email,
             password: ''
           });
         } catch (err) {
@@ -145,43 +153,81 @@ const AddUser = ({ CloseEvent, setSnackOpen, setSnackMessage, setSnackSeverity, 
           </IconButton>
         </Stack>
         <form onSubmit={sourceDataSubmit} style={{ Padding: '0' }}>
-          <Stack spacing={2} sx={{ px: 2 }}>
-            <TextField
-              type="text"
-              name="username"
-              id="outlined-basic"
-              label="User Name"
-              variant="outlined"
-              autoComplete="new-username"
-              size="small"
-              onChange={handleChanged}
-              value={userForm.username}
-              sx={{
-                minWidth: '100%',
-                ...inputStyle
-              }}
-              error={!!error?.username}
-              helperText={error?.username}
-            />
-            <TextField
-              type="password"
-              name="password"
-              id="outlined-basic"
-              label="Password"
-              variant="outlined"
-              autoComplete="new-password"
-              size="small"
-              onChange={handleChanged}
-              value={userForm.password}
-              sx={{
-                minWidth: '100%',
-                ...inputStyle
-              }}
-              error={!!error?.password}
-              helperText={error?.password}
-            />
+          <Stack spacing={2} sx={{ width: '100%' }}>
+            <Stack spacing={2} direction="row">
+              <TextField
+                type="text"
+                name="name"
+                id="outlined-basic"
+                label="Full Name"
+                variant="outlined"
+                autoComplete="new-name"
+                size="small"
+                onChange={handleChanged}
+                value={userForm.name}
+                sx={{
+                  flex: 1,
+                  ...inputStyle
+                }}
+                error={!!error?.name}
+                helperText={error?.name}
+              />
+              <TextField
+                type="text"
+                name="username"
+                id="outlined-basic"
+                label="User Name"
+                variant="outlined"
+                autoComplete="new-username"
+                size="small"
+                onChange={handleChanged}
+                value={userForm.username}
+                sx={{
+                  flex: 1,
+                  ...inputStyle
+                }}
+                error={!!error?.username}
+                helperText={error?.username}
+              />
+            </Stack>
+            <Stack spacing={2} direction="row">
+              <TextField
+                type="email"
+                name="email"
+                id="outlined-basic"
+                label="Email Address"
+                variant="outlined"
+                autoComplete="new-email"
+                size="small"
+                onChange={handleChanged}
+                value={userForm.email}
+                sx={{
+                  flex: 1,
+                  ...inputStyle
+                }}
+                error={!!error?.email}
+                helperText={error?.email}
+              />
+              <TextField
+                type="password"
+                name="password"
+                id="outlined-basic"
+                label="Password"
+                variant="outlined"
+                autoComplete="new-password"
+                size="small"
+                onChange={handleChanged}
+                value={userForm.password}
+                sx={{
+                  flex: 1,
+                  ...inputStyle
+                }}
+                error={!!error?.password}
+                helperText={error?.password}
+              />
+            </Stack>
             <Stack direction="row" justifyContent="center" spacing={2}>
-              <Button type="submit" variant="contained" className="addData-button">
+              <Button type="submit" variant="contained" className="addData-button" style={{ marginTop: '0.8rem' }}>
                 {buttonLabel}
               </Button>
             </Stack>
