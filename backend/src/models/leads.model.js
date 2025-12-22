@@ -1,13 +1,13 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../db/index.js";
 import { Status } from "./status.model.js";
 import { Sources } from "./source.model.js";
 import { User } from "./user.model.js";
+import { sequelize } from "../db/index.js";
 
 export const Leads = sequelize.define(
   "Leads",
   {
-    parent_status_id: {
+    status_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -17,7 +17,7 @@ export const Leads = sequelize.define(
       onDelete: "RESTRICT",
       onUpdate: "CASCADE",
     },
-    parent_source_id: {
+    source_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -27,7 +27,7 @@ export const Leads = sequelize.define(
       onDelete: "RESTRICT",
       onUpdate: "CASCADE",
     },
-    parent_user_id: {
+    assigned_user_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -37,79 +37,96 @@ export const Leads = sequelize.define(
       onDelete: "RESTRICT",
       onUpdate: "CASCADE",
     },
-    // tags: {
-    //   type: DataTypes.ARRAY(DataTypes.STRING),
-    //   allowNull: true,
-    // },
-    // name: {
+    tags: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: true,
+    },
+    // name_lead: {
     //   type: DataTypes.STRING,
     //   allowNull: false,
     //   validate: {
-    //     notEmpty: true,
+    //     notEmpty: {
+    //        msg : 'Name is required'
+    //     },
     //     len: [2, 100],
     //   },
     // },
-    // position: {
-    //   type: DataTypes.STRING,
-    //   allowNull: true,
-    // },
-    // email: {
-    //   type: DataTypes.STRING,
-    //   allowNull: true,
-    //   validate: {
-    //     isEmail: true,
-    //   },
-    // },
-    // website: {
-    //   type: DataTypes.STRING,
-    //   allowNull: true,
-    // },
-    // phone: {
-    //   type: DataTypes.STRING,
-    //   allowNull: true,
-    // },
-    // leadValue: {
-    //   type: DataTypes.DECIMAL(12, 2),
-    //   allowNull: true,
-    // },
-    // company: {
-    //   type: DataTypes.STRING,
-    //   allowNull: true,
-    // },
-    // description: {
-    //   type: DataTypes.TEXT,
-    //   allowNull: true,
-    // },
-    // address: {
-    //   type: DataTypes.STRING,
-    //   allowNull: true,
-    // },
-    // city: {
-    //   type: DataTypes.STRING,
-    //   allowNull: true,
-    // },
-    // state: {
-    //   type: DataTypes.STRING,
-    //   allowNull: true,
-    // },
-    // country: {
-    //   type: DataTypes.STRING,
-    //   allowNull: true,
-    // },
-    // zipCode: {
-    //   type: DataTypes.STRING,
-    //   allowNull: true,
-    // },
-    // defaultLanguage: {
-    //   type: DataTypes.STRING,
-    //   allowNull: true,
-    //   defaultValue: "System Default",
-    // },
-    // isPublic: {
-    //   type: DataTypes.BOOLEAN,
-    //   defaultValue: false,
-    // },
-    // contactedToday: {
+    name_lead: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Name is required",
+        },
+        len: {
+          args: [2, 100],
+          msg: "Name must be between 2 and 100 characters",
+        },
+      },
+    },
+
+    position: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        isEmail: true,
+      },
+    },
+    website: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    phone1: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    phone2: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+
+    leadValue: {
+      type: DataTypes.DECIMAL(18, 2),
+      allowNull: true,
+    },
+    company: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    address: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    city: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    state: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    country: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    zipCode: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    defaultLanguage: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: "System Default",
+    },
+    // contactedDate: {
     //   type: DataTypes.BOOLEAN,
     //   defaultValue: false,
     // },
@@ -130,16 +147,16 @@ export const Leads = sequelize.define(
 );
 
 Leads.belongsTo(Status, {
-  foreignKey: "parent_status_id",
-  as: "parentStatus",
+  foreignKey: "status_id",
+  as: "statusId",
 });
 
 Leads.belongsTo(Sources, {
-  foreignKey: "parent_source_id",
-  as: "parentSource",
+  foreignKey: "source_id",
+  as: "sourceId",
 });
 
 Leads.belongsTo(User, {
-  foreignKey: "parent_user_id",
-  as: "parentUser",
+  foreignKey: "assigned_user_id",
+  as: "assignedUserId",
 });

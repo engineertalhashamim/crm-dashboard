@@ -6,6 +6,7 @@ import contractReducer from './slices/contractSlice.js';
 import statusReducer from './slices/statusSlice.js';
 import sourceReducer from './slices/sourceSlice.js';
 import userReducer from "./slices/user.Slice.js";
+import leadReducer from "./slices/leadSlice.js"
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   status: statusReducer,
   source: sourceReducer,
   user: userReducer,
+  lead: leadReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

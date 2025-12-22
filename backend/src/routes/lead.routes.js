@@ -1,8 +1,11 @@
 import { Router } from "express";
-import { createLead } from "../controllers/lead.controller.js";
+import { createLead, searchSource, searchStatus, searchUser } from "../controllers/lead.controller.js";
 
 const router = Router();
 router.route("/createlead").post(createLead);
+router.route("/searchstatus").get(searchStatus);
+router.route("/searchsource").get(searchSource);
+router.route("/searchuser").get(searchUser);
 // router.route("/getallstatus").get(getAllStatus);
 // router.route("/deletestatus/:id").delete(deleteStatus);
 // router.route("/singlestatusdata/:id").get(singleStatusData);

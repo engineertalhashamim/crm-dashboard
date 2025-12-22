@@ -5,56 +5,59 @@ import { User } from "../models/user.model.js";
 import { Status } from "../models/status.model.js";
 import { Sources } from "../models/source.model.js";
 import { Leads } from "../models/leads.model.js";
+import { Op } from "sequelize";
 
 const createLead = asyncHandler(async (req, res) => {
-    console.log("hello 1..")
+  console.log("hello 1..");
   const {
-    parent_status_id,
-    parent_source_id,
-    parent_user_id,
+    status_id,
+    source_id,
+    assigned_user_id,
     tags,
-    name,
+    name_lead,
     position,
     email,
     website,
-    phone,
-    leadValue,
-    company,
-    description,
-    address,
-    city,
-    state,
-    country,
-    zipCode,
-    defaultLanguage,
-    isPublic,
-    contactedToday,
+    phone1,
+    phone2,
+    // leadValue,
+    // company,
+    // description,
+    // address,
+    // city,
+    // state,
+    // country,
+    // zipCode,
+    // defaultLanguage,
+    // isPublic,
+    // contactedToday,
   } = req.body;
 
-  if (!parent_status_id) throw new ApiError(400, "Status is required");
-  if (!parent_source_id) throw new ApiError(400, "Source is required");
+  if (!status_id) throw new ApiError(400, "Status is required");
+  if (!source_id) throw new ApiError(400, "Source is required");
 
-  const statusExists = await Status.findByPk(parent_status_id);
+  const statusExists = await Status.findByPk(status_id);
   if (!statusExists) throw new ApiError(400, "Invalid Status");
 
-  const sourceExists = await Sources.findByPk(parent_source_id);
+  const sourceExists = await Sources.findByPk(source_id);
   if (!sourceExists) throw new ApiError(400, "Invalid Source");
 
-  if (parent_user_id) {
-    const userExists = await User.findByPk(parent_user_id);
+  if (assigned_user_id) {
+    const userExists = await User.findByPk(assigned_user_id);
     if (!userExists) throw new ApiError(400, "Invalid User");
   }
 
   const createdLead = await Leads.create({
-    parent_status_id,
-    parent_source_id,
-    parent_user_id,
-    // tags,
-    // name,
-    // position,
-    // email,
-    // website,
-    // phone,
+    status_id,
+    source_id,
+    assigned_user_id,
+    tags,
+    name_lead,
+    position,
+    email,
+    website,
+    phone1,
+    phone2,
     // leadValue,
     // company,
     // description,
@@ -68,9 +71,19 @@ const createLead = asyncHandler(async (req, res) => {
     // contactedToday,
   });
 
-  if (!createdLead) throw new ApiError(400, "Leads creation failed");
+  if (!createdLead) {
+    throw new ApiError(400, "Validation error", [
+      { path: "tags", message: "Leads creation failed" },
+    ]);
+  }
 
   const createdResData = await getParentStatusWithLead(createdLead.id);
+
+  if (tags && !Array.isArray(tags)) {
+    throw new ApiError(400, "Validation error", [
+      { path: "tags", message: "Tags must be an array" },
+    ]);
+  }
 
   return res
     .status(200)
@@ -83,22 +96,75 @@ const getParentStatusWithLead = async (leadId) => {
     include: [
       {
         model: Status,
-        as: "parentStatus",
+        as: "statusId",
         attributes: ["id", "statusname"],
       },
       {
         model: Sources,
-        as: "parentSource",
+        as: "sourceId",
         attributes: ["id", "sourcename"],
       },
       {
         model: User,
-        as: "parentUser",
-        attributes: ["id", "name","email"],
+        as: "assignedUserId",
+        attributes: ["id", "name", "email"],
       },
     ],
   });
   return resData;
 };
 
-export { createLead };
+const searchStatus = asyncHandler(async (req, res) => {
+  const keyword = req.query.q;
+  if (!keyword) return res.json([]);
+
+  const results = await Status.findAll({
+    where: {
+      statusname: {
+        [Op.iLike]: `%${keyword}%`,
+      },
+    },
+    limit: 50,
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, results, "Data fetched successfully"));
+});
+
+const searchSource = asyncHandler(async (req, res) => {
+  const keyword = req.query.q;
+  if (!keyword) return res.json([]);
+
+  const results = await Sources.findAll({
+    where: {
+      sourcename: {
+        [Op.iLike]: `%${keyword}%`,
+      },
+    },
+    limit: 50,
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, results, "Data fetched successfully"));
+});
+
+const searchUser = asyncHandler(async (req, res) => {
+  const keyword = req.query.q;
+  if (!keyword) return res.json([]);
+  const results = await User.findAll({
+    where: {
+      username: {
+        [Op.iLike]: `%${keyword}%`,
+      },
+    },
+    limit: 50,
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, results, "Data fetched successfully"));
+});
+
+export { createLead, searchStatus, searchSource, searchUser };
