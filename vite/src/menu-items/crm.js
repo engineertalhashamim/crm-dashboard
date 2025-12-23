@@ -1,5 +1,5 @@
 // icons
-import { IconUsers, IconPlus, IconAddressBook, IconReceipt, IconFileText, IconTarget, IconBriefcase } from '@tabler/icons-react';
+import { IconUsers, IconPlus, IconAddressBook, IconReceipt, IconFileText, IconTarget, IconBriefcase, IconShare3 } from '@tabler/icons-react';
 
 const icons = {
   IconUsers,
@@ -8,7 +8,8 @@ const icons = {
   IconReceipt,
   IconFileText,
   IconBriefcase,
-  IconTarget
+  IconTarget,
+  IconShare3
 };
 
 // ==============================|| CRM MENU ITEMS ||============================== //
@@ -106,6 +107,14 @@ const crm = {
       type: 'item',
       url: '/crm/contracts/list',
       icon: icons.IconFileText,
+      breadcrumbs: false
+    },
+    {
+      id: 'crm-project',
+      title: 'Projects',
+      type: 'item',
+      url: '/crm/projects/list',
+      icon: icons.IconShare3,
       breadcrumbs: false
     }
   ]

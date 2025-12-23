@@ -19,11 +19,13 @@ import axios from 'axios';
 import { useState } from 'react';
 import DeleteDialog from '../../../ui-component/dialog-box/DeleteDialog.jsx';
 import { useDispatch, useSelector } from 'react-redux';
-// import { setContract, setDeleteContract, setLoading, setError } from '../../../store/slices/contractSlice.js';
 import { setAllLead, setDeleteLead, setLoading, setError } from '../../../store/slices/leadSlice.js';
 import LoopIcon from '@mui/icons-material/Loop';
 import NoDataFound from '../../../ui-component/common/NoDataFound.jsx';
 import React from 'react';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime)
 
 const style = {
   position: 'absolute',
@@ -50,7 +52,6 @@ const ListLead = () => {
   const [snackSeverity, setSnackSeverity] = React.useState('success');
 
   const dispatch = useDispatch();
-  // const { error, loading, contracts } = useSelector((state) => state.contract);
   const { error, loading, leadsArr } = useSelector((state) => state.lead);
 
   const navigate = useNavigate();
@@ -62,12 +63,12 @@ const ListLead = () => {
     const getAllLeads = async () => {
       dispatch(setLoading(true));
       try {
-        const res = await axios.get('http://localhost:8000/api/v1/contract/getallcontract');
+        const res = await axios.get('http://localhost:8000/api/v1/lead/getalllead');
         const resData = res.data?.data || [];
         dispatch(setAllLead(resData));
       } catch (error) {
-        console.log('Error in fetching contract', error);
-        dispatch(setError(error.message || 'Failed to fetch contract'));
+        console.log('Error in fetching lead', error);
+        dispatch(setError(error.message || 'Failed to fetch lead'));
       } finally {
         dispatch(setLoading(false));
       }
@@ -81,7 +82,7 @@ const ListLead = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const deleteContract = await axios.delete(`http://localhost:8000/api/v1/contract/deletecontract/${selectedId}`);
+      const deleteContract = await axios.delete(`http://localhost:8000/api/v1/lead/deletelead/${selectedId}`);
       console.log('delte id is..', selectedId);
       dispatch(setDeleteLead(selectedId));
       // setSnack
@@ -116,17 +117,26 @@ const ListLead = () => {
   };
 
   const columns = [
-    { label: 'Sno#' },
-    { label: 'Customer' },
-    { label: 'Subject' },
-    { label: 'Contract Type' },
-    { label: 'Contract Value' },
-    { label: 'Start Date' },
-    { label: 'End Date' },
+    { label: '#' },
+    { label: 'Name' },
+    { label: 'Comapny' },
+    { label: 'Email' },
+    { label: 'Phone' },
+    { label: 'Value' },
+    { label: 'Tags' },
+    { label: 'Assigned' },
+    { label: 'Status' },
+    { label: 'Source' },
+    { label: 'Last Contact' },
+    { label: 'Created' },
     { label: 'Action' }
   ];
 
   const columnsCount = columns.length;
+
+  useEffect(() => {
+    console.log('test lead list..', leadsArr);
+  }, [leadsArr]);
 
   return (
     <MainCard>
@@ -207,17 +217,22 @@ const ListLead = () => {
                     return (
                       <TableRow hover role="checkbox" key={row.id}>
                         <TableCell>{row.id}</TableCell>
-                        <TableCell>{row.parentCustomer?.companyname}</TableCell>
-                        <TableCell>{row.subject}</TableCell>
-                        <TableCell>{row.contractType}</TableCell>
-                        <TableCell>{row.contractValue}</TableCell>
-                        <TableCell>{row.startDate}</TableCell>
-                        <TableCell>{row.endDate}</TableCell>
+                        <TableCell>{row.name_lead}</TableCell>
+                        <TableCell>{row.company}</TableCell>
+                        <TableCell>{row.email}</TableCell>
+                        <TableCell>{row.phone1}</TableCell>
+                        <TableCell>{row.leadValue}</TableCell>
+                        <TableCell>{row.tags}</TableCell>
+                        <TableCell>{row.assignedUserId?.name}</TableCell>
+                        <TableCell>{row.statusId?.statusname}</TableCell>
+                        <TableCell>{row.sourceId?.sourcename}</TableCell>
+                        <TableCell>{row.phone2}</TableCell>
+                        <TableCell>{dayjs(row.createdAt).fromNow()}</TableCell>
                         {/*<TableCell></TableCell>*/}
                         <TableCell>
                           <Stack spacing={2} direction="row" sx={{ justifyContent: 'flex-end' }}>
                             <EditIcon
-                              onClick={() => navigate(`/crm/contracts/edit/${row.id}`)}
+                              onClick={() => navigate(`/crm/lead/edit/${row.id}`)}
                               style={{ fontSize: '20px', color: 'blue', cursor: 'pointer' }}
                             />
                             <DeleteIcon

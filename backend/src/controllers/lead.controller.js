@@ -73,7 +73,7 @@ const createLead = asyncHandler(async (req, res) => {
     ]);
   }
 
-  const createdResData = await getParentStatusWithLead(createdLead.id);
+  const createdResData = await getAutoCompleteDataInObj(createdLead.id);
 
   if (tags && !Array.isArray(tags)) {
     throw new ApiError(400, "Validation error", [
@@ -86,7 +86,7 @@ const createLead = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, createdResData, "Leads created successfully"));
 });
 
-const getParentStatusWithLead = async (leadId) => {
+const getAutoCompleteDataInObj = async (leadId) => {
   const resData = await Leads.findOne({
     where: { id: leadId },
     include: [
@@ -103,12 +103,105 @@ const getParentStatusWithLead = async (leadId) => {
       {
         model: User,
         as: "assignedUserId",
-        attributes: ["id", "name", "email"],
+        attributes: ["id", "username"],
       },
     ],
   });
   return resData;
 };
+
+const deleteLead = asyncHandler(async (req, res) => {
+  const leadId = req.params.id;
+
+  const disabledLead = await Leads.findByPk(leadId);
+  if (!disabledLead) throw new ApiError(400, "Lead not found");
+
+  disabledLead.active = false;
+  await disabledLead.save();
+
+  res.status(200).json(new ApiResponse(200, null, "Lead deleted successfully"));
+});
+
+const getAllLead = asyncHandler(async (req, res) => {
+  const allLead = await Leads.findAll({
+    where: { active: true },
+    include: [
+      {
+        model: Status,
+        as: "statusId",
+        attributes: ["id", "statusname"],
+      },
+      {
+        model: Sources,
+        as: "sourceId",
+        attributes: ["id", "sourcename"],
+      },
+      {
+        model: User,
+        as: "assignedUserId",
+        attributes: ["id", "username"],
+      },
+    ],
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, allLead, "All leads fetched successfully"));
+});
+
+const singleLeadData = asyncHandler(async (req, res) => {
+  const leadId = req.params.id;
+
+  const singleLead = await Leads.findOne({
+    where: { id: leadId },
+    include: [
+      {
+        model: Status,
+        as: "statusId",
+        attributes: ["id", "statusname"],
+      },
+      {
+        model: Sources,
+        as: "sourceId",
+        attributes: ["id", "sourcename"],
+      },
+      {
+        model: User,
+        as: "assignedUserId",
+        attributes: ["id", "username"],
+      },
+    ],
+  });
+
+  if (!singleLead) {
+    throw new ApiError(404, `Lead with ID ${leadId} not found`);
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, singleLead, "Lead details retrieved successfully")
+    );
+});
+
+const updateLead = asyncHandler(async (req, res) => {
+  const leadId = req.params.id;
+  const [updateCount, updatedRows] = await Leads.update(req.body, {
+    where: { id: leadId },
+    returning: true,
+    individualHooks: true,
+  });
+
+  if (updatedRows.length === 0) {
+    throw new ApiError(404, `Lead with ID ${leadId} not found`);
+  }
+
+  const updatedLead = updatedRows[0];
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updatedLead, "Lead updated successfully"));
+});
 
 const searchStatus = asyncHandler(async (req, res) => {
   const keyword = req.query.q;
@@ -163,4 +256,13 @@ const searchUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, results, "Data fetched successfully"));
 });
 
-export { createLead, searchStatus, searchSource, searchUser };
+export {
+  createLead,
+  getAllLead,
+  deleteLead,
+  singleLeadData,
+  updateLead,
+  searchStatus,
+  searchSource,
+  searchUser,
+};

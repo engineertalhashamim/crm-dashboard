@@ -1,22 +1,18 @@
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import * as React from 'react';
-import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
 import { Grid, Stack, Button, Autocomplete } from '@mui/material';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { useNavigate, useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-// import { setAddContract, setContract, setLoading, setError } from '../../../store/slices/contractSlice.js';
 import { setAddLead, setLoading, setError } from '../../../store/slices/leadSlice.js';
 import { SourceAutoComplete, StatusAutoComplete, UserAutoComplete } from '../../../ui-component/auto-complete/autoSearch';
 import Chip from '@mui/material/Chip';
+import CountrySelect from '../../../ui-component/auto-complete/CountrySelect.jsx';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
@@ -53,7 +49,7 @@ const AddLead = () => {
   const dispatch = useDispatch();
   const { error, loading, leadsArr } = useSelector((state) => state.lead);
 
-  const [contractForm, setContractForm] = useState({
+  const [leadForm, setLeadForm] = useState({
     status_id: '',
     source_id: '',
     assigned_user_id: '',
@@ -73,67 +69,69 @@ const AddLead = () => {
     country: '',
     zipCode: '',
     defaultLanguage: '',
-    statusData: null,
-    sourceData: null,
-    userData: null
+    statusId: null,
+    sourceId: null,
+    assignedUserId: null
   });
 
   const { id } = useParams();
   const isEditMode = Boolean(id);
+  console.log('test Edit lead id', id);
 
   const handleChanged = (e) => {
     const { name, value } = e.target;
-    setContractForm({
-      ...contractForm,
+    setLeadForm({
+      ...leadForm,
       [name]: value
     });
   };
 
   useEffect(() => {
     if (isEditMode) {
-      const fetchContract = async () => {
+      const fetchLead = async () => {
         console.log('ok555');
         try {
-          const res = await axios.get(`http://localhost:8000/api/v1/contract/singleContractData/${id}`);
+          const res = await axios.get(`http://localhost:8000/api/v1/lead/singleleaddata/${id}`);
           const data = res.data?.data;
-          console.log('contract edit data is...', data);
+          console.log('Lead edit data is...', data);
 
-          setContractForm(data);
+          setLeadForm(data);
         } catch (err) {
-          console.error('Error fetching contract:', err);
+          console.error('Error fetching lead:', err);
         } finally {
           console.log('All are perfect');
         }
       };
-      fetchContract();
+      fetchLead();
     }
   }, [id]);
 
-  const contractDataSubmit = async (e) => {
+  useEffect(() => {}, []);
+
+  const leadDataSubmit = async (e) => {
     e.preventDefault();
     dispatch(setLoading(true));
     try {
       if (isEditMode) {
-        const res = await axios.put(`http://localhost:8000/api/v1/contract/updatecontract/${id}`, contractForm);
+        const res = await axios.put(`http://localhost:8000/api/v1/lead/updatelead/${id}`, leadForm);
         const resData = res.data?.data;
         if (resData.id) {
           // dispatch(setUpdateContract(res.data?.data));
-          setMessage('contract updated successfully!');
+          setMessage('lead updated successfully!');
         } else {
           setMessage('Invalid edit response data');
           setSeverity('error');
         }
       } else {
         console.log('test1111 scu data..');
-        console.log('test old scu data..', contractForm);
+        console.log('test old scu data..', leadForm);
 
-        const res = await axios.post('http://localhost:8000/api/v1/lead/createlead', contractForm);
+        const res = await axios.post('http://localhost:8000/api/v1/lead/createlead', leadForm);
         const resData = res.data?.data;
-        console.log('test scu data..', resData);
-
+        console.log('leadform data get is ..', resData);
         if (resData.id) {
           dispatch(setAddLead(resData));
-          setMessage('Contract added successfully!');
+          setMessage('Lead added successfully!');
         } else {
           setMessage('Invalid response data');
           setSeverity('error');
@@ -151,12 +149,8 @@ const AddLead = () => {
         acc[curr.path] = curr.message;
         return acc;
       }, {});
-      console.log('test error lead..', err);
 
-      // console.log('formattedErrors:', formattedErrors);
-      // console.log('backendErrorsArray is:', backendErrorsArray);
-
-      const errorMessage = isEditMode ? 'Failed to update status' : 'Failed to add status';
+      const errorMessage = isEditMode ? 'Failed to update lead' : 'Failed to add lead';
       dispatch(setError(formattedErrors));
       setMessage(errorMessage || 'Something went wrong');
       setSeverity('error');
@@ -169,28 +163,28 @@ const AddLead = () => {
   const buttonLabel = loading ? (isEditMode ? 'Updating...' : 'Submitting...') : isEditMode ? 'Update Lead' : 'Add Lead';
 
   return (
-    <MainCard title={isEditMode ? 'Edit Contract' : 'Add Contract'}>
-      <form onSubmit={contractDataSubmit}>
+    <MainCard title={isEditMode ? 'Edit Leads' : 'Add Leads'}>
+      <form onSubmit={leadDataSubmit}>
         <Grid container spacing={2}>
           <Stack spacing={2} direction="row" marginTop={0} sx={{ width: '100%' }}>
             <Grid item xs={12} sx={{ width: '49%' }}>
               <StatusAutoComplete
                 onSelect={(id) => {
-                  setContractForm((prev) => ({ ...prev, status_id: id }));
+                  setLeadForm((prev) => ({ ...prev, status_id: id }));
                   console.log('id isss', id);
                 }}
                 required={true}
-                valueObject={contractForm?.statusData}
+                valueObject={leadForm?.statusId}
               />
             </Grid>
             <Grid item xs={12} sx={{ width: '49%' }}>
               <SourceAutoComplete
                 onSelect={(id) => {
-                  setContractForm((prev) => ({ ...prev, source_id: id }));
+                  setLeadForm((prev) => ({ ...prev, source_id: id }));
                   console.log('id isss', id);
                 }}
                 required={true}
-                valueObject={contractForm?.sourceData}
+                valueObject={leadForm?.sourceId}
               />
             </Grid>
           </Stack>
@@ -199,11 +193,11 @@ const AddLead = () => {
             <Grid item xs={12} sx={{ width: '49%' }}>
               <UserAutoComplete
                 onSelect={(id) => {
-                  setContractForm((prev) => ({ ...prev, assigned_user_id: id }));
+                  setLeadForm((prev) => ({ ...prev, assigned_user_id: id }));
                   console.log('id isss', id);
                 }}
                 required={true}
-                valueObject={contractForm?.userData}
+                valueObject={leadForm?.assignedUserId}
               />
             </Grid>
             <Grid item xs={12} sx={{ width: '49%' }}>
@@ -211,9 +205,9 @@ const AddLead = () => {
                 multiple
                 freeSolo
                 options={[]}
-                value={contractForm.tags}
+                value={leadForm.tags}
                 onChange={(event, newValue) => {
-                  setContractForm((prev) => ({
+                  setLeadForm((prev) => ({
                     ...prev,
                     tags: newValue
                   }));
@@ -237,7 +231,7 @@ const AddLead = () => {
                 autoComplete="new-name_lead"
                 size="small"
                 onChange={handleChanged}
-                value={contractForm.name_lead}
+                value={leadForm.name_lead}
                 sx={{
                   minWidth: '100%',
                   ...inputStyle
@@ -257,7 +251,7 @@ const AddLead = () => {
                 autoComplete="new-position"
                 size="small"
                 onChange={handleChanged}
-                value={contractForm.position}
+                value={leadForm.position}
                 sx={{
                   minWidth: '100%',
                   ...inputStyle
@@ -279,7 +273,7 @@ const AddLead = () => {
                 autoComplete="new-email"
                 size="small"
                 onChange={handleChanged}
-                value={contractForm.email}
+                value={leadForm.email}
                 sx={{
                   minWidth: '100%',
                   ...inputStyle
@@ -299,7 +293,7 @@ const AddLead = () => {
                 autoComplete="new-website"
                 size="small"
                 onChange={handleChanged}
-                value={contractForm.website}
+                value={leadForm.website}
                 sx={{
                   minWidth: '100%',
                   ...inputStyle
@@ -321,7 +315,7 @@ const AddLead = () => {
                 autoComplete="new-phone1"
                 size="small"
                 onChange={handleChanged}
-                value={contractForm.phone1}
+                value={leadForm.phone1}
                 sx={{
                   minWidth: '100%',
                   ...inputStyle
@@ -341,7 +335,7 @@ const AddLead = () => {
                 autoComplete="new-phone2"
                 size="small"
                 onChange={handleChanged}
-                value={contractForm.phone2}
+                value={leadForm.phone2}
                 sx={{
                   minWidth: '100%',
                   ...inputStyle
@@ -363,7 +357,7 @@ const AddLead = () => {
                 autoComplete="new-leadValue"
                 size="small"
                 onChange={handleChanged}
-                value={contractForm.leadValue}
+                value={leadForm.leadValue}
                 sx={{
                   minWidth: '100%',
                   ...inputStyle
@@ -382,7 +376,7 @@ const AddLead = () => {
                 autoComplete="new-company"
                 size="small"
                 onChange={handleChanged}
-                value={contractForm.company}
+                value={leadForm.company}
                 sx={{
                   minWidth: '100%',
                   ...inputStyle
@@ -404,7 +398,7 @@ const AddLead = () => {
                 autoComplete="new-description"
                 size="small"
                 onChange={handleChanged}
-                value={contractForm.description}
+                value={leadForm.description}
                 sx={{
                   minWidth: '100%',
                   ...inputStyle
@@ -418,12 +412,12 @@ const AddLead = () => {
                 type="text"
                 name="address"
                 id="outlined-basic"
-                label="address"
+                label="Address"
                 variant="outlined"
                 autoComplete="new-address"
                 size="small"
                 onChange={handleChanged}
-                value={contractForm.address}
+                value={leadForm.address}
                 sx={{
                   minWidth: '100%',
                   ...inputStyle
@@ -431,6 +425,98 @@ const AddLead = () => {
                 error={!!error?.address}
                 helperText={error?.address}
               />
+            </Grid>
+          </Stack>
+
+          <Stack spacing={2} direction="row" marginTop={0} sx={{ width: '100%' }}>
+            <Grid item xs={12} sx={{ width: '49%' }}>
+              <TextField
+                type="text"
+                name="city"
+                id="outlined-basic"
+                label="City"
+                variant="outlined"
+                autoComplete="new-city"
+                size="small"
+                onChange={handleChanged}
+                value={leadForm.city}
+                sx={{
+                  minWidth: '100%',
+                  ...inputStyle
+                }}
+                error={!!error?.city}
+                helperText={error?.city}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sx={{ width: '49%' }}>
+              <TextField
+                type="text"
+                name="state"
+                id="outlined-basic"
+                label="State"
+                variant="outlined"
+                autoComplete="new-state"
+                size="small"
+                onChange={handleChanged}
+                value={leadForm.state}
+                sx={{
+                  minWidth: '100%',
+                  ...inputStyle
+                }}
+                error={!!error?.state}
+                helperText={error?.state}
+              />
+            </Grid>
+          </Stack>
+
+          <Stack spacing={2} direction="row" marginTop={0} sx={{ width: '100%' }}>
+            <Grid item xs={12} sx={{ width: '49%' }}>
+              <CountrySelect name="country" value={leadForm.country} onChange={handleChanged} />
+            </Grid>
+            <Grid item xs={12} sx={{ width: '49%' }}>
+              <TextField
+                type="text"
+                name="zipCode"
+                id="outlined-basic"
+                label="zipCode"
+                variant="outlined"
+                autoComplete="new-zipCode"
+                size="small"
+                onChange={handleChanged}
+                value={leadForm.zipCode}
+                sx={{
+                  minWidth: '100%',
+                  ...inputStyle
+                }}
+                error={!!error?.zipCode}
+                helperText={error?.zipCode}
+              />
+            </Grid>
+          </Stack>
+
+          <Stack spacing={2} direction="row" marginTop={0} sx={{ width: '100%' }}>
+            <Grid item xs={12} sx={{ width: '49%' }}>
+              <TextField
+                type="text"
+                name="defaultLanguage"
+                id="outlined-basic"
+                label="Default Language"
+                variant="outlined"
+                autoComplete="new-defaultLanguage"
+                size="small"
+                onChange={handleChanged}
+                value={leadForm.defaultLanguage}
+                sx={{
+                  minWidth: '100%',
+                  ...inputStyle
+                }}
+                error={!!error?.defaultLanguage}
+                helperText={error?.defaultLanguage}
+              />
+            </Grid>
+            <Grid item xs={12} sx={{ width: '49%' }}>
+              {/* <CountrySelect name="country" value={leadForm.country} onChange={handleChanged} /> */}
             </Grid>
           </Stack>
 

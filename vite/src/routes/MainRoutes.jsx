@@ -41,6 +41,9 @@ const ListLead = Loadable(lazy(() => import('views/crm/lead/ListLead.jsx')));
 const ListUser = Loadable(lazy(() => import('views/crm/users/ListUser.jsx')));
 const AddUser = Loadable(lazy(() => import('views/crm/users/AddUser.jsx')));
 
+const ListProject = Loadable(lazy(() => import('views/crm/projects/ListProject.jsx')));
+const AddProject = Loadable(lazy(() => import('views/crm/projects/AddProject.jsx')));
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -72,6 +75,14 @@ const MainRoutes = {
     {
       path: 'crm',
       children: [
+        {
+          path: 'users',
+          children: [
+            { path: 'list', element: <ListUser /> },
+            { path: 'add', element: <AddUser /> },
+            { path: 'edit/:id', element: <AddContracts /> }
+          ]
+        },
         {
           path: 'clients',
           children: [
@@ -127,7 +138,8 @@ const MainRoutes = {
             },
 
             { path: '', element: <ListLead /> },
-            { path: 'add', element: <AddLead /> }
+            { path: 'add', element: <AddLead /> },
+            { path: 'edit/:id', element: <AddLead /> }
 
             // {
             //   path: 'lead',
@@ -147,11 +159,11 @@ const MainRoutes = {
           ]
         },
         {
-          path: 'users',
+          path: 'projects',
           children: [
-            { path: 'list', element: <ListUser /> },
-            { path: 'add', element: <AddUser /> },
-            { path: 'edit/:id', element: <AddContracts /> }
+            { path: 'list', element: <ListProject /> },
+            { path: 'add', element: <AddProject /> },
+            { path: 'edit/:id', element: <AddProject /> }
           ]
         }
       ]

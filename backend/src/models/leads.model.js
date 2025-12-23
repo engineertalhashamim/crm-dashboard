@@ -89,12 +89,8 @@ export const Leads = sequelize.define(
       allowNull: true,
       validate: {
         min: {
-          args: 0,
-          msg: "Lead value must be at least 0",
-        },
-        max: {
-          args: 9999999999999999.99, // max 18 digits total, 2 decimals
-          msg: "Lead value must be at most 18 digits",
+          args: [0, 18],
+          msg: "Lead value must be from 0 to 18 digits",
         },
         isDecimal: {
           msg: "Lead value must be a decimal number",
@@ -133,6 +129,10 @@ export const Leads = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
       defaultValue: "System Default",
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
     // contactedDate: {
     //   type: DataTypes.BOOLEAN,
