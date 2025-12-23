@@ -64,6 +64,15 @@ const AddLead = () => {
     website: '',
     phone1: '',
     phone2: '',
+    leadValue: '',
+    company: '',
+    description: '',
+    address: '',
+    city: '',
+    state: '',
+    country: '',
+    zipCode: '',
+    defaultLanguage: '',
     statusData: null,
     sourceData: null,
     userData: null
@@ -134,7 +143,7 @@ const AddLead = () => {
       setOpen(true);
       setTimeout(() => navigate('/crm/lead'), 1500);
     } catch (err) {
-        console.log('test error lead..', err);
+      console.log('test error lead..', err);
 
       // extract backend response
       const backendErrorsArray = err.response?.data?.errors || [];
@@ -142,7 +151,7 @@ const AddLead = () => {
         acc[curr.path] = curr.message;
         return acc;
       }, {});
-        console.log('test error lead..', err);
+      console.log('test error lead..', err);
 
       // console.log('formattedErrors:', formattedErrors);
       // console.log('backendErrorsArray is:', backendErrorsArray);
@@ -235,6 +244,7 @@ const AddLead = () => {
                 }}
                 error={!!error?.name_lead}
                 helperText={error?.name_lead}
+                required
               />
             </Grid>
             <Grid item xs={12} sx={{ width: '49%' }}>
@@ -300,7 +310,7 @@ const AddLead = () => {
             </Grid>
           </Stack>
 
-              <Stack spacing={2} direction="row" marginTop={0} sx={{ width: '100%' }}>
+          <Stack spacing={2} direction="row" marginTop={0} sx={{ width: '100%' }}>
             <Grid item xs={12} sx={{ width: '49%' }}>
               <TextField
                 type="text"
@@ -338,6 +348,88 @@ const AddLead = () => {
                 }}
                 error={!!error?.phone2}
                 helperText={error?.phone2}
+              />
+            </Grid>
+          </Stack>
+
+          <Stack spacing={2} direction="row" marginTop={0} sx={{ width: '100%' }}>
+            <Grid item xs={12} sx={{ width: '49%' }}>
+              <TextField
+                type="text"
+                name="leadValue"
+                id="outlined-basic"
+                label="Lead Value"
+                variant="outlined"
+                autoComplete="new-leadValue"
+                size="small"
+                onChange={handleChanged}
+                value={contractForm.leadValue}
+                sx={{
+                  minWidth: '100%',
+                  ...inputStyle
+                }}
+                error={!!error?.leadValue}
+                helperText={error?.leadValue}
+              />
+            </Grid>
+            <Grid item xs={12} sx={{ width: '49%' }}>
+              <TextField
+                type="text"
+                name="company"
+                id="outlined-basic"
+                label="Company"
+                variant="outlined"
+                autoComplete="new-company"
+                size="small"
+                onChange={handleChanged}
+                value={contractForm.company}
+                sx={{
+                  minWidth: '100%',
+                  ...inputStyle
+                }}
+                error={!!error?.company}
+                helperText={error?.company}
+              />
+            </Grid>
+          </Stack>
+
+          <Stack spacing={2} direction="row" marginTop={0} sx={{ width: '100%' }}>
+            <Grid item xs={12} sx={{ width: '49%' }}>
+              <TextField
+                type="text"
+                name="description"
+                id="outlined-basic"
+                label="Description"
+                variant="outlined"
+                autoComplete="new-description"
+                size="small"
+                onChange={handleChanged}
+                value={contractForm.description}
+                sx={{
+                  minWidth: '100%',
+                  ...inputStyle
+                }}
+                error={!!error?.description}
+                helperText={error?.description}
+              />
+            </Grid>
+            <Grid item xs={12} sx={{ width: '49%' }}>
+              <TextField
+                type="text"
+                name="address"
+                id="outlined-basic"
+                label="address"
+                variant="outlined"
+                autoComplete="new-address"
+                size="small"
+                onChange={handleChanged}
+                value={contractForm.address}
+                sx={{
+                  minWidth: '100%',
+                  ...inputStyle
+                }}
+                error={!!error?.address}
+                helperText={error?.address}
               />
             </Grid>
           </Stack>

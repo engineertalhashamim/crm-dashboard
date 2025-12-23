@@ -41,23 +41,10 @@ export const Leads = sequelize.define(
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: true,
     },
-    // name_lead: {
-    //   type: DataTypes.STRING,
-    //   allowNull: false,
-    //   validate: {
-    //     notEmpty: {
-    //        msg : 'Name is required'
-    //     },
-    //     len: [2, 100],
-    //   },
-    // },
     name_lead: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: {
-          msg: "Name is required",
-        },
         len: {
           args: [2, 100],
           msg: "Name must be between 2 and 100 characters",
@@ -81,17 +68,38 @@ export const Leads = sequelize.define(
       allowNull: true,
     },
     phone1: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(11),
       allowNull: false,
+      validate: {
+        len: {
+          args: [11, 11],
+          msg: "Phone Number must be 11 digits",
+        },
+        isNumeric: {
+          msg: "Phone Number must contain only digits",
+        },
+      },
     },
     phone2: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-
     leadValue: {
       type: DataTypes.DECIMAL(18, 2),
       allowNull: true,
+      validate: {
+        min: {
+          args: 0,
+          msg: "Lead value must be at least 0",
+        },
+        max: {
+          args: 9999999999999999.99, // max 18 digits total, 2 decimals
+          msg: "Lead value must be at most 18 digits",
+        },
+        isDecimal: {
+          msg: "Lead value must be a decimal number",
+        },
+      },
     },
     company: {
       type: DataTypes.STRING,
