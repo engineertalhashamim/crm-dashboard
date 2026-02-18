@@ -11,27 +11,29 @@ app.use(
   cors({
     origin: ["http://localhost:3000"],
     credentials: true,
-  })
+  }),
 );
 
 const PgSession = new pgSession(session);
 
-app.use(session({
-  // name: "crm.sid",
-  store: new PgSession({
-    pool:pgPool,
-    tableName: "user_sessions",
+app.use(
+  session({
+    // name: "crm.sid",
+    store: new PgSession({
+      pool: pgPool,
+      tableName: "user_sessions",
+    }),
+    secret: process.env.SECRET_KEY,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 1000 * 60 * 60 * 24, //1Day
+    },
   }),
-  secret: process.env.SECRET_KEY,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: 'lax',
-    maxAge: 1000 * 60 * 60 * 24, //1Day
-  },
-}));
+);
 
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
@@ -47,6 +49,7 @@ import statusRouter from "./routes/status.routes.js";
 import sourcesRouter from "./routes/source.routes.js";
 import userRouter from "./routes/user.routes.js";
 import leadRouter from "./routes/lead.routes.js";
+import projectRouter from "./routes/project.routes.js";
 
 app.use("/api/v1/client", clientRouter);
 app.use("/api/v1/contact", contactRouter);
@@ -55,6 +58,7 @@ app.use("/api/v1/status", statusRouter);
 app.use("/api/v1/source", sourcesRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/lead", leadRouter);
+app.use("/api/v1/project", projectRouter);
 
 app.use(errorHandler);
 

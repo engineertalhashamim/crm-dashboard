@@ -44,6 +44,15 @@ const AddUser = Loadable(lazy(() => import('views/crm/users/AddUser.jsx')));
 const ListProject = Loadable(lazy(() => import('views/crm/projects/ListProject.jsx')));
 const AddProject = Loadable(lazy(() => import('views/crm/projects/AddProject.jsx')));
 
+const ListEstimate = Loadable(lazy(() => import('views/crm/estimates/ListEstimate.jsx')));
+const AddEstimate = Loadable(lazy(() => import('views/crm/estimates/AddEstimate.jsx')));
+
+const ListProposal = Loadable(lazy(() => import('views/crm/proposals/ListProposal.jsx')));
+const AddProposal = Loadable(lazy(() => import('views/crm/proposals/AddProposal.jsx')));
+
+const ListItem = Loadable(lazy(() => import('views/crm/items/ListItem.jsx')));
+const AddItem = Loadable(lazy(() => import('views/crm/items/AddItem.jsx')));
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -126,7 +135,6 @@ const MainRoutes = {
               children: [
                 { path: '', element: <ListStatus /> },
                 { path: 'add', element: <AddStatus /> }
-                // { path: 'edit/:id', element: <AddStatus /> }
               ]
             },
             {
@@ -140,14 +148,31 @@ const MainRoutes = {
             { path: '', element: <ListLead /> },
             { path: 'add', element: <AddLead /> },
             { path: 'edit/:id', element: <AddLead /> }
-
-            // {
-            //   path: 'lead',
-            //   children: [
-            //     { path: '', element: <ListLead /> },
-            //     { path: 'add', element: <AddLead /> }
-            //   ]
-            // }
+          ]
+        },
+        {
+          path: 'estimates',
+          children: [
+            { path: 'list', element: <ListEstimate /> },
+            { path: 'add', element: <AddEstimate /> },
+            { path: 'edit/:id', element: <AddEstimate /> }
+          ]
+        },
+        {
+          path: 'proposals',
+          children: [
+            { path: 'list', element: <ListProposal /> },
+            { path: 'add', element: <AddProposal /> },
+            { path: 'edit/:id', element: <AddProposal /> }
+          ]
+        },
+        ,
+        {
+          path: 'items',
+          children: [
+            { path: 'list', element: <ListItem /> },
+            { path: 'add', element: <AddItem /> },
+            { path: 'edit/:id', element: <AddItem /> }
           ]
         },
         {

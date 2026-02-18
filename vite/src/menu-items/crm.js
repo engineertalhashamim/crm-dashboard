@@ -1,5 +1,14 @@
 // icons
-import { IconUsers, IconPlus, IconAddressBook, IconReceipt, IconFileText, IconTarget, IconBriefcase, IconShare3 } from '@tabler/icons-react';
+import {
+  IconUsers,
+  IconPlus,
+  IconAddressBook,
+  IconReceipt,
+  IconFileText,
+  IconTarget,
+  IconBriefcase,
+  IconShare3
+} from '@tabler/icons-react';
 
 const icons = {
   IconUsers,
@@ -116,6 +125,35 @@ const crm = {
       url: '/crm/projects/list',
       icon: icons.IconShare3,
       breadcrumbs: false
+    },
+    {
+      id: 'crm-sales',
+      title: 'Sales',
+      type: 'collapse',
+      icon: icons.IconReceipt,
+      children: [
+        {
+          id: 'estimates',
+          title: 'Estimates',
+          type: 'item',
+          url: '/crm/estimates/list',
+          breadcrumbs: false
+        },
+        {
+          id: 'proposals',
+          title: 'Proposals',
+          type: 'item',
+          url: '/crm/proposals/list',
+          breadcrumbs: false
+        },
+        {
+          id: 'items',
+          title: 'Items',
+          type: 'item',
+          url: '/crm/items/list',
+          breadcrumbs: false
+        }
+      ]
     }
   ]
 };

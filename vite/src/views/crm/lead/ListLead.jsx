@@ -25,7 +25,7 @@ import NoDataFound from '../../../ui-component/common/NoDataFound.jsx';
 import React from 'react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-dayjs.extend(relativeTime)
+dayjs.extend(relativeTime);
 
 const style = {
   position: 'absolute',
@@ -223,7 +223,7 @@ const ListLead = () => {
                         <TableCell>{row.phone1}</TableCell>
                         <TableCell>{row.leadValue}</TableCell>
                         <TableCell>{row.tags}</TableCell>
-                        <TableCell>{row.assignedUserId?.name}</TableCell>
+                        <TableCell>{row.assignedUserId?.username}</TableCell>
                         <TableCell>{row.statusId?.statusname}</TableCell>
                         <TableCell>{row.sourceId?.sourcename}</TableCell>
                         <TableCell>{row.phone2}</TableCell>

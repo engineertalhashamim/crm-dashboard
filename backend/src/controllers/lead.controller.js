@@ -8,7 +8,6 @@ import { Leads } from "../models/leads.model.js";
 import { Op } from "sequelize";
 
 const createLead = asyncHandler(async (req, res) => {
-  console.log("hello 1..");
   const {
     status_id,
     source_id,
@@ -180,7 +179,7 @@ const singleLeadData = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, singleLead, "Lead details retrieved successfully")
+      new ApiResponse(200, singleLead, "Lead details retrieved successfully"),
     );
 });
 

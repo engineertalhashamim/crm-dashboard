@@ -232,3 +232,109 @@ export const UserAutoComplete = ({ onSelect, required = false, valueObject }) =>
     />
   );
 };
+
+export const MultiUserAutoComplete = ({ onSelect, required = false, valueObject = [] }) => {
+  const [optionArray, setOptionArray] = useState([]);
+  const [inputValue, setInputValue] = useState('');
+  const [selectedOption, setSelectedOption] = useState([]);
+
+  const fetchSuggestions = async () => {
+    try {
+      const res = await axios.get('http://localhost:8000/api/v1/lead/searchuser?q=' + inputValue);
+      setOptionArray(res.data?.data || []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (inputValue.length < 1) return;
+
+    const timer = setTimeout(() => {
+      fetchSuggestions();
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [inputValue]);
+
+  useEffect(() => {
+    setSelectedOption(valueObject);
+  }, [valueObject]);
+
+  const options = optionArray.map((option) => ({
+    id: option.id,
+    username: option.username
+  }));
+
+  return (
+    <Autocomplete
+      multiple
+      options={options}
+      value={selectedOption}
+      getOptionLabel={(option) => option.username}
+      onInputChange={(event, value) => setInputValue(value)}
+      onChange={(event, value) => {
+        setSelectedOption(value);
+
+        // sirf ids parent ko bhej rahe hain
+        onSelect(value.map((item) => item.id));
+      }}
+      renderInput={(params) => <TextField {...params} label="Select user" required={required} />}
+    />
+  );
+};
+
+export const ClientAutoComplete = ({ onSelect, required = false, valueObject }) => {
+  const [optionArray, setOptionArray] = useState([]);
+  const [inputValue, setInputValue] = useState('');
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  const fetchSuggestions = async () => {
+    try {
+      const res = await axios.get('http://localhost:8000/api/v1/project/searchclient?q=' + inputValue);
+      const apiData = res.data?.data;
+      setOptionArray(apiData);
+      console.log('search data....', apiData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (inputValue.length < 1) return;
+
+    const timer = setTimeout(() => {
+      fetchSuggestions();
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [inputValue]);
+
+  useEffect(() => {
+    setSelectedOption(valueObject);
+    console.log('val object', selectedOption);
+  }, [valueObject]);
+
+  const defProp = {
+    options: optionArray.map((option) => ({ id: option.id, companyname: option.companyname })),
+    getOptionLabel: (options) => options.companyname
+  };
+
+  const getData = (data) => {
+    setSelectedOption(data);
+    console.log('data is...', data);
+  };
+
+  return (
+    <Autocomplete
+      {...defProp}
+      value={selectedOption}
+      onInputChange={(event, value) => setInputValue(value)}
+      renderInput={(params) => <TextField {...params} label="select client" required={required} />}
+      onChange={(event, value) => {
+        console.log('teh val is...', value);
+        getData(value);
+        onSelect(value.id);
+      }}
+    />
+  );
+};

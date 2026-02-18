@@ -1,41 +1,46 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db/index.js";
+import { Client } from "./client.model.js";
 
-export const Projects = sequelize.define(
-  "Projects",
+import {
+  billingTypeOptions,
+  statusOptions,
+} from "../constants/projectOptions.js";
+
+export const Project = sequelize.define(
+  "Project",
   {
     project_name: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        notEmpty: { msg: "Project name is required" },
-        len: { args: [2, 100], msg: "Project name must be 2–100 characters" },
-      },
+      unique: true,
     },
     customer_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "clients",
+        model: Client,
         key: "id",
       },
       onDelete: "RESTRICT",
       onUpdate: "CASCADE",
     },
     billing_type: {
-      type: DataTypes.ENUM("Task Hours", "Fixed Rate", "Project Hours"),
-      allowNull: true,
+      type: DataTypes.ENUM(...billingTypeOptions),
+      allowNull: false,
     },
     status: {
-      type: DataTypes.ENUM(
-        "Not Started",
-        "In Progress",
-        "On Hold",
-        "Completed",
-        "Cancelled"
-      ),
-      allowNull: true,
+      type: DataTypes.ENUM(...statusOptions),
+      allowNull: false,
       defaultValue: "Not Started",
+    },
+    total_rate: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    rate_per_hour: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
     estimated_hours: {
       type: DataTypes.DECIMAL(6, 2),
@@ -44,22 +49,20 @@ export const Projects = sequelize.define(
         min: 0,
       },
     },
-    members: {
-      type: DataTypes.ARRAY(DataTypes.INTEGER),
-      allowNull: true,
-    },
-    calculate_progress: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-    progress: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-      validate: {
-        min: 0,
-        max: 100,
-      },
-    },
+    // members: {
+    //   type: DataTypes.ARRAY(DataTypes.INTEGER),
+    //   allowNull: true,
+    //   defaultValue: [],
+    //   validate: {
+    //     isValid(value) {
+    //       if (!value) return;
+    //       if (!Array.isArray(value))
+    //         throw new Error("Members must be an array");
+    //       if (value.some((id) => id <= 0))
+    //         throw new Error("IDs must be positive");
+    //     },
+    //   },
+    // },
     start_date: {
       type: DataTypes.DATEONLY,
       allowNull: true,
@@ -76,10 +79,6 @@ export const Projects = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    send_email: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
     active: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
@@ -88,6 +87,17 @@ export const Projects = sequelize.define(
   {
     tableName: "projects",
     timestamps: true,
+    indexes: [
+      {
+        fields: ["customer_id"],
+      },
+      {
+        fields: ["status"],
+      },
+      {
+        fields: ["project_name"],
+      },
+    ],
     hooks: {
       beforeValidate: (instance) => {
         for (const key in instance.dataValues) {
@@ -97,10 +107,12 @@ export const Projects = sequelize.define(
         }
       },
     },
-  }
+  },
 );
 
-Projects.belongsTo(Client, {
+Project.belongsTo(Client, {
   foreignKey: "customer_id",
-  as: "customerId",
+  as: "customer",
+  onDelete: "RESTRICT",
+  onUpdate: "CASCADE",
 });
