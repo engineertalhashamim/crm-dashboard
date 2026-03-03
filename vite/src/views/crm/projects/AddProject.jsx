@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ClientAutoComplete, MultiUserAutoComplete } from '../../../ui-component/auto-complete/autoSearch';
 import Chip from '@mui/material/Chip';
 import FormControl from '@mui/material/FormControl';
-cc
 import MenuItem from '@mui/material/MenuItem';
 import RichText from '../../../ui-component/common/RichText.jsx';
 import { setAddProject, setUpdateProject, setLoading, setError } from '../../../store/slices/projectSlice.js';
@@ -73,7 +72,6 @@ const AddProject = () => {
 
   const { id } = useParams();
   const isEditMode = Boolean(id);
-  console.log('test Edit lead id', id);
 
   const handleChanged = (e) => {
     const { name, value } = e.target;
@@ -82,13 +80,6 @@ const AddProject = () => {
       [name]: value
     });
   };
-
-  useEffect(() => {
-    const fetchOptions1 = async () => {
-      console.log('log test..', billingOptions);
-    };
-    fetchOptions1();
-  }, []);
 
   useEffect(() => {
     const fetchOptions = async () => {

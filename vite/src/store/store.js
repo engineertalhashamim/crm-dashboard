@@ -8,6 +8,7 @@ import sourceReducer from './slices/sourceSlice.js';
 import userReducer from './slices/user.Slice.js';
 import leadReducer from './slices/leadSlice.js';
 import projectReducer from './slices/projectSlice.js';
+import itemReducer from './slices/ItemSlice.js';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   lead: leadReducer,
   project: projectReducer,
+  item: itemReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

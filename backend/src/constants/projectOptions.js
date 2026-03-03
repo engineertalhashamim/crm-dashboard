@@ -7,7 +7,3 @@ export const statusOptions = [
   "Completed",
   "Cancelled",
 ];
-
-
-
-

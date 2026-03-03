@@ -136,11 +136,11 @@ const ListEstimate = () => {
           }}
         >
           <Typography variant="h3" sx={{ fontWeight: 500, fontSize: '1.155rem' }}>
-            Projects
+            Estimates
           </Typography>
           <Typography gutterBottom component="div">
             <Button onClick={gotoaddproj} variant="contained" className="addData-button" endIcon={<AddCircleIcon />}>
-              Add Project
+              Add Estimate
             </Button>
           </Typography>
         </Stack>

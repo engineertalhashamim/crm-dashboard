@@ -1,15 +1,12 @@
-import { TextField, Button, Stack, IconButton, Grid } from '@mui/material';
+import { TextField, Button, Stack, IconButton, FormControl, InputLabel, Select, FormHelperText, MenuItem } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import MainCard from 'ui-component/cards/MainCard';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-// import { setAddSource, setLoading, setError, setUpdateSource } from '../../../store/slices/sourceSlice.js';
-import { setLoading, setError, setAddUser, setUpdateUser, clearError } from '../../../store/slices/user.Slice.js';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import FormControl from '../../../ui-component/extended/Form/FormControl.jsx';
+import { setLoading, setError, setAddItem, setUpdateItem, clearError } from '../../../store/slices/ItemSlice.js';
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -48,23 +45,38 @@ const inputStyle = {
 
 const AddItem = ({ CloseEvent, setSnackOpen, setSnackMessage, setSnackSeverity, editModaVar }) => {
   const dispatch = useDispatch();
-  const { error, loading } = useSelector((state) => state.user);
-  const [userForm, setUserForm] = useState({
-    name: '',
-    username: '',
-    email: '',
-    password: ''
+  const { error, loading } = useSelector((state) => state.item);
+
+  const [itemForm, setItemForm] = useState({
+    description: '',
+    long_description: '',
+    rate: '',
+    tax_1: 'No Tax',
+    tax_2: 'No Tax',
+    unit: '',
+    item_group: null
   });
-  const [billingOptions, setBillingOptions] = useState([]);
-  const [statusOptions, setStatusOptions] = useState([]);
+
+  const [taxOptions, setTaxOptions] = useState([]);
+  const [groupOptions, setGroupOptions] = useState([]);
 
   const handleChanged = (e) => {
     const { name, value } = e.target;
-    setUserForm({
-      ...userForm,
+    setItemForm({
+      ...itemForm,
       [name]: value
     });
   };
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      const res = await axios.get('http://localhost:8000/api/v1/item/getitemoptions');
+      setGroupOptions(res.data?.itemGroupOptions);
+      setTaxOptions(res.data?.itemTaxOptions);
+    };
+
+    fetchOptions();
+  }, []);
 
   useEffect(() => {
     dispatch(clearError());
@@ -72,47 +84,51 @@ const AddItem = ({ CloseEvent, setSnackOpen, setSnackMessage, setSnackSeverity, 
 
   useEffect(() => {
     if (editModaVar) {
-      const fetchUser = async () => {
+      const fetchItem = async () => {
         try {
-          const res = await axios.get(`http://localhost:8000/api/v1/user/singleuserdata/${editModaVar}`, { withCredentials: true });
+          const res = await axios.get(`http://localhost:8000/api/v1/item/singleitemdata/${editModaVar}`, { withCredentials: true });
           const data = res.data?.data;
           console.log('this is data...', data);
-          setUserForm({
-            name: data.name,
-            username: data.username,
-            email: data.email,
-            password: ''
+          setItemForm({
+            description: data.description,
+            long_description: data.long_description,
+            rate: data.rate,
+            tax_1: data.tax_1,
+            tax_2: data.tax_2,
+            unit: data.unit,
+            item_group: data.item_group
           });
         } catch (err) {
-          console.error('Error fetching user:', err);
+          console.error('Error fetching item:', err);
         } finally {
           console.log('All are perfect');
         }
       };
-      fetchUser();
+      fetchItem();
     }
   }, [editModaVar]);
 
-  const sourceDataSubmit = async (e) => {
+  const itemDataSubmit = async (e) => {
     e.preventDefault();
     dispatch(setLoading(true));
     try {
       if (editModaVar) {
-        const res = await axios.put(`http://localhost:8000/api/v1/user/updateuser/${editModaVar}`, userForm, { withCredentials: true });
+        const res = await axios.put(`http://localhost:8000/api/v1/item/updateitem/${editModaVar}`, itemForm, { withCredentials: true });
         const resData = res.data?.data;
         if (resData.id) {
-          dispatch(setUpdateUser(resData));
-          setSnackMessage('user updated successfully!');
+          dispatch(setUpdateItem(resData));
+          setSnackMessage('item updated successfully!');
         } else {
           setSnackMessage('Invalid edit response data');
           setSnackSeverity('error');
         }
       } else {
-        const res = await axios.post('http://localhost:8000/api/v1/user/createuser', userForm);
+        const res = await axios.post('http://localhost:8000/api/v1/item/createitem', itemForm);
         const resData = res.data?.data;
+
         if (resData.id) {
-          dispatch(setAddUser(resData));
-          setSnackMessage('user added successfully!');
+          dispatch(setAddItem(resData));
+          setSnackMessage('Item added successfully!');
         } else {
           setSnackMessage('Invalid response data');
           setSnackSeverity('error');
@@ -129,10 +145,7 @@ const AddItem = ({ CloseEvent, setSnackOpen, setSnackMessage, setSnackSeverity, 
         return acc;
       }, {});
 
-      // console.log('formattedErrors:', formattedErrors);
-      // console.log('backendErrorsArray is:', backendErrorsArray);
-
-      const errorMessage = editModaVar ? 'Failed to update user' : 'Failed to add user';
+      const errorMessage = editModaVar ? 'Failed to update item' : 'Failed to add item';
       dispatch(setError(formattedErrors));
       setSnackMessage(errorMessage || 'Something went wrong');
       setSnackSeverity('error');
@@ -142,153 +155,173 @@ const AddItem = ({ CloseEvent, setSnackOpen, setSnackMessage, setSnackSeverity, 
     }
   };
 
-  // useEffect(() => {
-  //   console.log('get status data is..', statusArr);
-  // }, [statusArr]);
-
-  const buttonLabel = loading ? (editModaVar ? 'Updating...' : 'Submitting...') : editModaVar ? 'Update user' : 'Add user';
+  const buttonLabel = loading ? (editModaVar ? 'Updating...' : 'Submitting...') : editModaVar ? 'Update Item' : 'Add Item';
 
   return (
     <>
-      <MainCard sx={{ ...style }} title={editModaVar ? 'Edit User' : 'Add User'} className="modal-pop-cls">
+      <MainCard sx={{ ...style }} title={editModaVar ? 'Edit Item' : 'Add Item'} className="modal-pop-cls">
         <Stack direction="row" justifyContent="flex-end" position={'absolute'} right={8} top={8}>
           <IconButton onClick={CloseEvent}>
             <CloseIcon />
           </IconButton>
         </Stack>
-        <form onSubmit={sourceDataSubmit} style={{ Padding: '0' }}>
-          <Stack spacing={2} sx={{ width: '100%' }}>
-            <Stack spacing={2} direction="row">
-              <TextField
-                type="text"
-                name="name"
-                id="outlined-basic"
-                label="Description"
-                variant="outlined"
-                autoComplete="new-name"
-                size="small"
-                onChange={handleChanged}
-                value={userForm.name}
-                sx={{
-                  flex: 1,
-                  ...inputStyle
-                }}
-                error={!!error?.name}
-                helperText={error?.name}
-              />
-            </Stack>
-            <Stack spacing={2} direction="row">
-              <TextField
-                multiline
-                rows={4}
-                type="text"
-                label="Long Description"
-                name="total_rate"
-                fullWidth
-                onChange={handleChanged}
-                value={userForm.total_rate}
-                error={!!error?.total_rate}
-                helperText={error?.total_rate}
-              />
-            </Stack>
-            <Stack spacing={2} direction="row">
-              <TextField
-                type="number"
-                name="total_rate"
-                id="outlined-basic"
-                label="Rate - USD (Base Currency)"
-                variant="outlined"
-                autoComplete="new-name_lead"
-                size="small"
-                onChange={handleChanged}
-                value={userForm.total_rate}
-                sx={{
-                  minWidth: '100%',
-                  ...inputStyle
-                }}
-                error={!!error?.total_rate}
-                helperText={error?.total_rate}
-                required
-              />
-            </Stack>
-            <Stack spacing={2} direction="row">
-              <TextField
-                type="number"
-                name="total_rate"
-                id="outlined-basic"
-                label="Rate - EUR"
-                variant="outlined"
-                autoComplete="new-name_lead"
-                size="small"
-                onChange={handleChanged}
-                value={userForm.total_rate}
-                sx={{
-                  minWidth: '100%',
-                  ...inputStyle
-                }}
-                error={!!error?.total_rate}
-                helperText={error?.total_rate}
-                required
-              />
-            </Stack>
-            <Stack spacing={2} direction="row" marginTop={0} sx={{ width: '100%' }}>
-              <FormControl
-                fullWidth
-                sx={{
-                  width: '49%',
-                  ...inputStyle // ✅ spread your custom style
-                }}
-              >
-                <InputLabel id="demo-simple-select-label">Billing Type</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Billing Type"
-                  name="billing_type"
-                  onChange={handleChanged}
-                  value={userForm.billing_type || ''}
-                  error={!!error?.billing_type}
-                  helperText={error?.billing_type}
+        <form onSubmit={itemDataSubmit} style={{ Padding: '0' }}>
+          <div className="w-full flex flex-col gap-4 text-left">
+            <TextField
+              type="text"
+              name="description"
+              id="outlined-basic"
+              label="Description"
+              variant="outlined"
+              autoComplete="new-description"
+              size="small"
+              onChange={handleChanged}
+              value={itemForm.description}
+              sx={{
+                flex: 1,
+                ...inputStyle
+              }}
+              error={!!error?.description}
+              helperText={error?.description}
+            />
+            <TextField
+              multiline
+              rows={4}
+              type="text"
+              label="Long Description"
+              name="long_description"
+              fullWidth
+              onChange={handleChanged}
+              sx={{
+                ...inputStyle
+              }}
+              value={itemForm.long_description}
+              error={!!error?.long_description}
+              helperText={error?.long_description}
+            />
+            <TextField
+              type="number"
+              name="rate"
+              id="outlined-basic"
+              label="Rate"
+              variant="outlined"
+              autoComplete="new-rate"
+              size="small"
+              onChange={handleChanged}
+              value={itemForm.rate}
+              sx={{
+                minWidth: '100%',
+                ...inputStyle
+              }}
+              error={!!error?.rate}
+              helperText={error?.rate}
+            />
+
+            {/* Bill To / Ship To */}
+            <div className="flex gap-4">
+              <div className="w-1/2">
+                <FormControl
+                  fullWidth
+                  sx={{
+                    ...inputStyle
+                  }}
+                  error={!!error?.tax_1}
                 >
-                  {billingOptions.map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl
-                fullWidth
-                sx={{
-                  width: '49%',
-                  ...inputStyle // ✅ spread your custom style
-                }}
-              >
-                <InputLabel id="demo-simple-select-label">Status</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Status"
-                  name="status"
-                  onChange={handleChanged}
-                  value={userForm.status || ''}
-                  error={!!error?.status}
-                  helperText={error?.status}
+                  <InputLabel id="demo-simple-select-label2">Tax 2</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label2"
+                    id="demo-simple-select"
+                    label="Tax 1"
+                    name="tax_1"
+                    onChange={handleChanged}
+                    value={itemForm.tax_1 || ''}
+                  >
+                    {taxOptions.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText>{error?.tax_1}</FormHelperText>
+                </FormControl>
+              </div>
+              <div className="w-1/2">
+                <FormControl
+                  fullWidth
+                  sx={{
+                    ...inputStyle
+                  }}
+                  error={!!error?.tax_2}
                 >
-                  {statusOptions.map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Stack>
-            <Stack direction="row" justifyContent="center" spacing={2}>
-              <Button type="submit" variant="contained" className="addData-button" style={{ marginTop: '0.8rem' }}>
-                {buttonLabel}
-              </Button>
-            </Stack>
-          </Stack>
+                  <InputLabel id="demo-simple-select-label">Tax 2</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Tax 2"
+                    name="tax_2"
+                    onChange={handleChanged}
+                    value={itemForm.tax_2 || ''}
+                  >
+                    {taxOptions.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText>{error?.tax_2}</FormHelperText>
+                </FormControl>
+              </div>
+            </div>
+
+            <TextField
+              type="text"
+              name="unit"
+              id="outlined-basic"
+              label="Unit"
+              variant="outlined"
+              autoComplete="new-unit"
+              size="small"
+              onChange={handleChanged}
+              value={itemForm.unit}
+              sx={{
+                minWidth: '100%',
+                ...inputStyle
+              }}
+              error={!!error?.unit}
+              helperText={error?.unit}
+            />
+
+            <FormControl
+              fullWidth
+              sx={{
+                ...inputStyle
+              }}
+              error={!!error?.item_group}
+            >
+              <InputLabel id="demo-simple-select-label">Item Group</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Item group"
+                name="item_group"
+                onChange={handleChanged}
+                value={itemForm.item_group || ''}
+              >
+                {groupOptions.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>{error?.item_group}</FormHelperText>
+            </FormControl>
+          </div>
+
+          <div className="flex justify-center mt-3">
+            <Button type="submit" variant="contained" className="addData-button">
+              {buttonLabel}
+            </Button>
+          </div>
         </form>
       </MainCard>
     </>

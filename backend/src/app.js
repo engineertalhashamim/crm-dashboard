@@ -50,6 +50,7 @@ import sourcesRouter from "./routes/source.routes.js";
 import userRouter from "./routes/user.routes.js";
 import leadRouter from "./routes/lead.routes.js";
 import projectRouter from "./routes/project.routes.js";
+import itemRouter from "./routes/item.routes.js";
 
 app.use("/api/v1/client", clientRouter);
 app.use("/api/v1/contact", contactRouter);
@@ -59,6 +60,7 @@ app.use("/api/v1/source", sourcesRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/lead", leadRouter);
 app.use("/api/v1/project", projectRouter);
+app.use("/api/v1/item", itemRouter);
 
 app.use(errorHandler);
 

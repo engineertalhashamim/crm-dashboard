@@ -19,9 +19,4 @@ router.route("/getprojectoptions").get(getProjectOptions);
 
 router.route("/searchclient").get(searchClient);
 
-// Testing Route
-// router.get("/test", (req, res) => {
-//   res.json({ message: "Route works project!" });
-// });
-
 export default router;

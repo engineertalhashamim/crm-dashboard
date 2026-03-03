@@ -20,23 +20,11 @@ import axios from 'axios';
 import { useState } from 'react';
 import DeleteDialog from '../../../ui-component/dialog-box/DeleteDialog.jsx';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllUser, setDeleteUser, setLoading, setError, clearError } from '../../../store/slices/user.Slice.js';
+import { setAllItem, setDeleteItem, setLoading, setError } from '../../../store/slices/ItemSlice.js';
 import LoopIcon from '@mui/icons-material/Loop';
 import NoDataFound from '../../../ui-component/common/NoDataFound.jsx';
 import AddItem from './AddItem.jsx';
 import Snackbar from '@mui/material/Snackbar';
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4
-};
 
 const ListItem = () => {
   const [page, setPage] = useState(0);
@@ -53,19 +41,17 @@ const ListItem = () => {
   const [snackSeverity, setSnackSeverity] = React.useState('success');
 
   const dispatch = useDispatch();
-  const { error, loading, usersArr } = useSelector((state) => state.user);
+  const { error, loading, itemArr } = useSelector((state) => state.item);
 
   useEffect(() => {
     const getAllUsers = async () => {
       dispatch(setLoading(true));
       try {
-        const res = await axios.get('http://localhost:8000/api/v1/user/getalluser', { withCredentials: true });
+        const res = await axios.get('http://localhost:8000/api/v1/item/getallitem', { withCredentials: true });
         const resData = res.data?.data || [];
-        dispatch(setAllUser(resData));
-        console.log('hello', resData);
+        dispatch(setAllItem(resData));
       } catch (error) {
-        console.log('Error in fetching user', error);
-        dispatch(setError(error.message || 'Failed to fetch user'));
+        dispatch(setError(error.message || 'Failed to fetch item'));
       } finally {
         dispatch(setLoading(false));
       }
@@ -75,13 +61,13 @@ const ListItem = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const deleteUser = await axios.delete(`http://localhost:8000/api/v1/user/deleteuser/${selectedId}`, { withCredentials: true });
-      dispatch(setDeleteUser(selectedId));
-      setSnackMessage('User deleted successfully!');
+      await axios.delete(`http://localhost:8000/api/v1/item/deleteitem/${selectedId}`, { withCredentials: true });
+      dispatch(setDeleteItem(selectedId));
+      setSnackMessage('Item deleted successfully!');
     } catch (error) {
       setSnackMessage('something went wrong!');
       setSnackSeverity('error');
-      console.log('Error deleting User', error);
+      console.log('Error deleting item', error);
     }
 
     setSnackSeverity('success');
@@ -182,7 +168,6 @@ const ListItem = () => {
                           fontWeight: index === 0 ? '700' : '500',
                           color: index === 0 ? '#000000' : '#364152',
                           whiteSpace: 'nowrap'
-                          //   width: '1%'
                         }}
                         align={col.label === 'Action' ? 'right' : 'left'}
                         sx={{ whiteSpace: 'nowrap' }}
@@ -226,17 +211,17 @@ const ListItem = () => {
                         </TableCell>
                       </TableRow>
                     );
-                  } else if (Array.isArray(usersArr) && usersArr.length > 0) {
-                    tableContent = usersArr.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+                  } else if (Array.isArray(itemArr) && itemArr.length > 0) {
+                    tableContent = itemArr.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
                       return (
                         <TableRow hover role="checkbox" key={row.id}>
-                          <TableCell>Consultant Services</TableCell>
-                          <TableCell>Pig!' She said the Hatter: 'I'm on the breeze that followed them, the melancholy words.</TableCell>
-                          <TableCell>$350.00</TableCell>
-                          <TableCell>0.00%</TableCell>
-                          <TableCell>0.00%</TableCell>
-                          <TableCell>-</TableCell>
-                          <TableCell>Services</TableCell>
+                          <TableCell>{row.description}</TableCell>
+                          <TableCell>{row.long_description ? row.long_description : '-'}</TableCell>
+                          <TableCell>{row.rate}</TableCell>
+                          <TableCell>{row.tax_1}</TableCell>
+                          <TableCell>{row.tax_2}</TableCell>
+                          <TableCell>{row.unit ? row.unit : '-'}</TableCell>
+                          <TableCell>{row.item_group ? row.item_group : '-'}</TableCell>
                           <TableCell>
                             <Stack spacing={2} direction="row" sx={{ justifyContent: 'flex-end' }}>
                               <EditIcon
@@ -256,7 +241,7 @@ const ListItem = () => {
                     tableContent = (
                       <TableRow>
                         <TableCell colSpan={columnsCount} align="center">
-                          <NoDataFound message="No user Found" onAddClick={() => handleChangeOpenMode(null)} />
+                          <NoDataFound message="No item Found" onAddClick={() => handleChangeOpenMode(null)} />
                         </TableCell>
                       </TableRow>
                     );
@@ -270,7 +255,7 @@ const ListItem = () => {
           <TablePagination
             rowsPerPageOptions={[7, 25, 100]}
             component="div"
-            count={usersArr.length}
+            count={itemArr.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
