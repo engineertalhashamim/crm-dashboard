@@ -53,7 +53,7 @@ const ListSources = () => {
   const [snackSeverity, setSnackSeverity] = React.useState('success');
 
   const dispatch = useDispatch();
-  const {error,loading, sourceArr} = useSelector((state)=> state.source);
+  const { error, loading, sourceArr } = useSelector((state) => state.source);
 
   useEffect(() => {
     const getAllSource = async () => {
@@ -174,6 +174,11 @@ const ListSources = () => {
                         key={col.label}
                         style={{ minWidth: '100px', fontWeight: '600' }}
                         align={col.label === 'Action' ? 'right' : 'left'}
+                        sx={{
+                          minWidth: 100,
+                          fontWeight: 600,
+                          backgroundColor: '#f5f7fa'
+                        }}
                       >
                         {col.label}
                       </TableCell>

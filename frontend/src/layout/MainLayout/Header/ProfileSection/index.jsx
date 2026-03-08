@@ -144,14 +144,14 @@ export default function ProfileSection() {
                     <Box sx={{ p: 2, pb: 0 }}>
                       <Stack>
                         <Stack direction="row" sx={{ alignItems: 'center', gap: 0.5 }}>
-                          <Typography variant="h4">Good Morning,</Typography>
+                          {/* <Typography variant="h4">Good Morning,</Typography> */}
                           <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
                             {loggedInUser.username}
                           </Typography>
                         </Stack>
                         <Typography variant="subtitle2">Project Admin</Typography>
                       </Stack>
-                      <OutlinedInput
+                      {/* <OutlinedInput
                         sx={{ width: '100%', pr: 1, pl: 2, my: 2 }}
                         id="input-search-profile"
                         value={value}
@@ -164,8 +164,8 @@ export default function ProfileSection() {
                         }
                         aria-describedby="search-helper-text"
                         slotProps={{ input: { 'aria-label': 'weight' } }}
-                      />
-                      <Divider />
+                      /> */}
+                      {/* <Divider /> */}
                     </Box>
                     <Box
                       sx={{
@@ -177,9 +177,9 @@ export default function ProfileSection() {
                         '&::-webkit-scrollbar': { width: 5 }
                       }}
                     >
-                      <UpgradePlanCard />
-                      <Divider />
-                      <Card sx={{ bgcolor: 'primary.light', my: 2 }}>
+                      {/* <UpgradePlanCard /> */}
+                      {/* <Divider /> */}
+                      {/* <Card sx={{ bgcolor: 'primary.light', my: 2 }}>
                         <CardContent>
                           <Stack sx={{ gap: 3 }}>
                             <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
@@ -192,8 +192,8 @@ export default function ProfileSection() {
                             </Stack>
                           </Stack>
                         </CardContent>
-                      </Card>
-                      <Divider />
+                      </Card> */}
+                      {/* <Divider /> */}
                       <List
                         component="nav"
                         sx={{
@@ -204,13 +204,13 @@ export default function ProfileSection() {
                           '& .MuiListItemButton-root': { mt: 0.5 }
                         }}
                       >
-                        <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
+                        {/* <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
                           <ListItemIcon>
                             <IconSettings stroke={1.5} size="20px" />
                           </ListItemIcon>
                           <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
-                        </ListItemButton>
-                        <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
+                        </ListItemButton> */}
+                        {/* <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
                           <ListItemIcon>
                             <IconUser stroke={1.5} size="20px" />
                           </ListItemIcon>
@@ -230,7 +230,7 @@ export default function ProfileSection() {
                               </Stack>
                             }
                           />
-                        </ListItemButton>
+                        </ListItemButton> */}
                         <ListItemButton sx={{ borderRadius: `${borderRadius}px` }}>
                           <ListItemIcon>
                             <IconLogout stroke={1.5} size="20px" />

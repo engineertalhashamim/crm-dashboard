@@ -189,7 +189,7 @@ const ProfileSection = () => {
                                         }}
                                     >
                                         <Box sx={{ p: 2 }}>
-                                            <UpgradePlanCard />
+                                            {/* <UpgradePlanCard /> */}
                                             <Divider />
                                             <Card
                                                 sx={{
@@ -250,7 +250,7 @@ const ProfileSection = () => {
                                                     }
                                                 }}
                                             >
-                                                <ListItemButton
+                                                {/* <ListItemButton
                                                     sx={{
                                                         borderRadius: `${customization.borderRadius}px`
                                                     }}
@@ -261,8 +261,8 @@ const ProfileSection = () => {
                                                         <IconSettings stroke={1.5} size="1.3rem" />
                                                     </ListItemIcon>
                                                     <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
-                                                </ListItemButton>
-                                                <ListItemButton
+                                                </ListItemButton> */}
+                                                {/* <ListItemButton
                                                     sx={{
                                                         borderRadius: `${customization.borderRadius}px`
                                                     }}
@@ -291,7 +291,7 @@ const ProfileSection = () => {
                                                             </Grid>
                                                         }
                                                     />
-                                                </ListItemButton>
+                                                </ListItemButton> */}
                                                 <ListItemButton
                                                     sx={{
                                                         borderRadius: `${customization.borderRadius}px`
@@ -302,7 +302,7 @@ const ProfileSection = () => {
                                                     <ListItemIcon>
                                                         <IconLogout stroke={1.5} size="1.3rem" />
                                                     </ListItemIcon>
-                                                    <ListItemText primary={<Typography variant="body2">Logout</Typography>} />
+                                                    <ListItemText primary={<Typography variant="body2">Logout1</Typography>} />
                                                 </ListItemButton>
                                             </List>
                                         </Box>

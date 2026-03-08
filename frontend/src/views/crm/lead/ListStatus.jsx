@@ -174,6 +174,11 @@ const ListStatus = () => {
                         key={col.label}
                         style={{ minWidth: '100px', fontWeight: '600' }}
                         align={col.label === 'Action' ? 'right' : 'left'}
+                        sx={{
+                          minWidth: 100,
+                          fontWeight: 600,
+                          backgroundColor: '#f5f7fa'
+                        }}
                       >
                         {col.label}
                       </TableCell>

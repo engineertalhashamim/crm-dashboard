@@ -8,6 +8,7 @@ export default function ListItemButton(theme) {
           color: theme.vars.palette.text.primary,
           paddingTop: '10px',
           paddingBottom: '10px',
+          margin: '4px 8px',
 
           '&.Mui-selected': {
             color: theme.vars.palette.secondary.dark,

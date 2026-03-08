@@ -261,3 +261,54 @@
 .tox .tox-statusbar {
   display: none !important;
 }
+
+// extra css
+/* Target all MUI TextField components */
+.MuiTextField-root,
+.MuiFormControl-root {
+  font-family: 'Roboto', sans-serif; /* optional */
+}
+
+/* Outlined variant */
+.MuiOutlinedInput-root {
+  border-radius: 8px;
+  background-color: transparent;
+}
+
+.MuiOutlinedInput-root fieldset {
+  border-color: #e0e3e7;
+}
+
+.MuiOutlinedInput-root:hover fieldset {
+  border-color: #b2bac2;
+}
+
+.MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: #ede7f6;
+  box-shadow: none;
+}
+
+.MuiInputLabel-root {
+  color: #6f7e8c;
+}
+
+.MuiInputLabel-root.Mui-focused {
+  color: #5e35b1;
+}
+
+/* Autofill fix for Chrome */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #000000 !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  animation: onAutofillStart 0s forwards;
+}
+
+@keyframes onAutofillStart {
+  from {
+  }
+  to {
+    color: #000000;
+    background: #ffffff;
+  }
+}
