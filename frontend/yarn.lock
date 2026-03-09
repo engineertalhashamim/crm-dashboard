@@ -934,17 +934,17 @@
   resolved "https://registry.npmjs.org/@svgdotjs/svg.select.js/-/svg.select.js-4.0.3.tgz"
   integrity sha512-qkMgso1sd2hXKd1FZ1weO7ANq12sNmQJeGDjs46QwDVsxSRcHmvWKL2NDF7Yimpwf3sl5esOLkPqtV2bQ3v/Jg==
 
-"@tabler/icons-react@^3.36.0":
-  version "3.36.0"
-  resolved "https://registry.npmjs.org/@tabler/icons-react/-/icons-react-3.36.0.tgz"
-  integrity sha512-sSZ00bEjTdTTskVFykq294RJq+9cFatwy4uYa78HcYBCXU1kSD1DIp5yoFsQXmybkIOKCjp18OnhAYk553UIfQ==
+"@tabler/icons-react@^3.40.0":
+  version "3.40.0"
+  resolved "https://registry.npmjs.org/@tabler/icons-react/-/icons-react-3.40.0.tgz"
+  integrity sha512-oO5+6QCnna4a//mYubx4euZfECtzQZFDGsDMIdzZUhbdyBCT+3bRVFBPueGIcemWld4Vb/0UQ39C/cmGfGylAg==
   dependencies:
-    "@tabler/icons" "3.36.0"
+    "@tabler/icons" "3.40.0"
 
-"@tabler/icons@3.36.0":
-  version "3.36.0"
-  resolved "https://registry.npmjs.org/@tabler/icons/-/icons-3.36.0.tgz"
-  integrity sha512-z9OfTEG6QbaQWM9KBOxxUdpgvMUn0atageXyiaSc2gmYm51ORO8Ua7eUcjlks+Dc0YMK4rrodAFdK9SfjJ4ZcA==
+"@tabler/icons@3.40.0":
+  version "3.40.0"
+  resolved "https://registry.npmjs.org/@tabler/icons/-/icons-3.40.0.tgz"
+  integrity sha512-V/Q4VgNPKubRTiLdmWjV/zscYcj5IIk+euicUtaVVqF6luSC9rDngYWgST5/yh3Mrg/mYUwRv1YVTk71Jp0twQ==
 
 "@tailwindcss/node@4.1.18":
   version "4.1.18"
@@ -990,6 +990,13 @@
     "@tailwindcss/node" "4.1.18"
     "@tailwindcss/oxide" "4.1.18"
     tailwindcss "4.1.18"
+
+"@tinymce/tinymce-react@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.npmjs.org/@tinymce/tinymce-react/-/tinymce-react-6.3.0.tgz"
+  integrity sha512-E++xnn0XzDzpKr40jno2Kj7umfAE6XfINZULEBBeNjTMvbACWzA6CjiR6V8eTDc9yVmdVhIPqVzV4PqD5TZ/4g==
+  dependencies:
+    prop-types "^15.6.2"
 
 "@tiptap/core@^3.17.1":
   version "3.17.1"
