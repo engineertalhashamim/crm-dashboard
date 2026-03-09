@@ -1,0 +1,13 @@
+# Node deps (root)
+node_modules/
+# Build outputs
+dist/
+build/
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+# Env/secrets
+.env
+*.log
